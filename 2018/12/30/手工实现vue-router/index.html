@@ -5,19 +5,19 @@
   
   <title>手工实现vue-router | 周宇涛的网络日志</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="目前工作使用的技术栈是:  123456vue.js: JS框架vue-router: 路由控制vuex: 类Flux单向数据流管理vue-i18n: 国际化iview: UI组件库...第三方工具库 今天是元旦放假的第一天，窝在家里，倍感无聊，所以写下本文。一是想巩固对vue-router的掌握，二是当作记录，方便你我他。">
-<meta name="keywords" content="Vue.js,JS,Router">
+  <meta name="description" content="今天是元旦放假的第一天，窝在家里，倍感无聊，所以写下本文。一是想巩固对vue-router的掌握，二是当作记录，方便你我他。">
+<meta name="keywords" content="JS,Vue.js,Router">
 <meta property="og:type" content="article">
 <meta property="og:title" content="手工实现vue-router">
 <meta property="og:url" content="http://yoursite.com/2018/12/30/手工实现vue-router/index.html">
 <meta property="og:site_name" content="周宇涛的网络日志">
-<meta property="og:description" content="目前工作使用的技术栈是:  123456vue.js: JS框架vue-router: 路由控制vuex: 类Flux单向数据流管理vue-i18n: 国际化iview: UI组件库...第三方工具库 今天是元旦放假的第一天，窝在家里，倍感无聊，所以写下本文。一是想巩固对vue-router的掌握，二是当作记录，方便你我他。">
+<meta property="og:description" content="今天是元旦放假的第一天，窝在家里，倍感无聊，所以写下本文。一是想巩固对vue-router的掌握，二是当作记录，方便你我他。">
 <meta property="og:locale" content="default">
 <meta property="og:image" content="http://yoursite.com/2018/12/30/手工实现vue-router/pathList-map.jpg">
-<meta property="og:updated_time" content="2018-12-31T08:54:34.881Z">
+<meta property="og:updated_time" content="2018-12-31T11:53:26.620Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="手工实现vue-router">
-<meta name="twitter:description" content="目前工作使用的技术栈是:  123456vue.js: JS框架vue-router: 路由控制vuex: 类Flux单向数据流管理vue-i18n: 国际化iview: UI组件库...第三方工具库 今天是元旦放假的第一天，窝在家里，倍感无聊，所以写下本文。一是想巩固对vue-router的掌握，二是当作记录，方便你我他。">
+<meta name="twitter:description" content="今天是元旦放假的第一天，窝在家里，倍感无聊，所以写下本文。一是想巩固对vue-router的掌握，二是当作记录，方便你我他。">
 <meta name="twitter:image" content="http://yoursite.com/2018/12/30/手工实现vue-router/pathList-map.jpg">
   
     <link rel="alternate" href="/atom.xml" title="周宇涛的网络日志" type="application/atom+xml">
@@ -95,10 +95,10 @@
       
         <!-- Table of Contents -->
         
-        <p>目前工作使用的技术栈是: </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">vue.js: JS框架</span><br><span class="line">vue-router: 路由控制</span><br><span class="line">vuex: 类Flux单向数据流管理</span><br><span class="line">vue-i18n: 国际化</span><br><span class="line">iview: UI组件库</span><br><span class="line">...第三方工具库</span><br></pre></td></tr></table></figure>
-<p>今天是元旦放假的第一天，窝在家里，倍感无聊，所以写下本文。一是想巩固对<a href="https://router.vuejs.org/" target="_blank" rel="noopener"><code>vue-router</code></a>的掌握，二是当作记录，方便你我他。</p>
+        <p>今天是元旦放假的第一天，窝在家里，倍感无聊，所以写下本文。一是想巩固对<a href="https://router.vuejs.org/" target="_blank" rel="noopener"><code>vue-router</code></a>的掌握，二是当作记录，方便你我他。</p>
 <a id="more"></a>
+<p>目前工作使用的技术栈是: </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">vue.js: JS框架</span><br><span class="line">vue-router: 路由控制</span><br><span class="line">vuex: 类Flux单向数据流管理</span><br><span class="line">vue-i18n: 国际化</span><br><span class="line">iview: UI组件库</span><br><span class="line">...第三方工具库</span><br></pre></td></tr></table></figure>
 <p>可能因为当前业务复杂度一般，所以对<code>vue-router</code>所要求的功能并不是很多，像<code>alias</code>这种重命名就基本没有使用过，所以我只会加入日常工作中使用最多的功能，可以说是官方<code>vue-router</code>的阉割版(如果你对<code>vue-router</code>的更多功能感兴趣，可以在本文的基础上，再查阅官方<code>vue-router</code>的源码)。</p>
 <p>在开发我们的<code>vue-router</code>(下面简称<code>router</code>)，我们首先需要了解一下如何开发一个<code>vue</code>插件。</p>
 <h2 id="vue插件"><a href="#vue插件" class="headerlink" title="vue插件"></a>vue插件</h2><blockquote>
@@ -152,7 +152,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/12/30/手工实现vue-router/" data-id="cjqbqm44l0000fkvvm0db1lsz" class="article-share-link">分享</a>
+      <a data-url="http://yoursite.com/2018/12/30/手工实现vue-router/" data-id="cjqc9meyl0003fsvvvei8z4pa" class="article-share-link">分享</a>
       
       
       

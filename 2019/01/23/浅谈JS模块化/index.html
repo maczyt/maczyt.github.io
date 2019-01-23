@@ -3,20 +3,20 @@
 <head><meta name="generator" content="Hexo 3.8.0">
   <meta charset="utf-8">
   
-  <title>浅谈JS模块化 | 周宇涛的网络日志</title>
+  <title>浅谈JS模块化和闭包 | 周宇涛的网络日志</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="最近有被问到require import的区别和模块间如果相互引用会发生什么等问题。 思考了一会，对于模块间相互引用，应该内部进行了处理，只是觉得应该，说不出一二三。而require则直说出是值复制，而import是引用。 发现自己在模块化方面了解的不多，赶紧搜资料恶补起来，并通过曾经的学习经历+恶补经历在这里记录下来。">
+  <meta name="description" content="最近有被问到require import的区别和模块间如果相互引用会发生什么等问题。 思考了一会，对于模块间相互引用，应该内部进行了处理，只是觉得应该，说不出一二三。而require则只说出是值复制，而import是引用。 发现自己在模块化方面了解的不多，赶紧搜资料恶补起来，并通过曾经的学习经历+恶补经历在这里记录下来。">
 <meta name="keywords" content="JS,基础">
 <meta property="og:type" content="article">
-<meta property="og:title" content="浅谈JS模块化">
+<meta property="og:title" content="浅谈JS模块化和闭包">
 <meta property="og:url" content="https://maczyt.github.io/2019/01/23/浅谈JS模块化/index.html">
 <meta property="og:site_name" content="周宇涛的网络日志">
-<meta property="og:description" content="最近有被问到require import的区别和模块间如果相互引用会发生什么等问题。 思考了一会，对于模块间相互引用，应该内部进行了处理，只是觉得应该，说不出一二三。而require则直说出是值复制，而import是引用。 发现自己在模块化方面了解的不多，赶紧搜资料恶补起来，并通过曾经的学习经历+恶补经历在这里记录下来。">
+<meta property="og:description" content="最近有被问到require import的区别和模块间如果相互引用会发生什么等问题。 思考了一会，对于模块间相互引用，应该内部进行了处理，只是觉得应该，说不出一二三。而require则只说出是值复制，而import是引用。 发现自己在模块化方面了解的不多，赶紧搜资料恶补起来，并通过曾经的学习经历+恶补经历在这里记录下来。">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-01-23T13:55:29.487Z">
+<meta property="og:updated_time" content="2019-01-23T14:47:05.592Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="浅谈JS模块化">
-<meta name="twitter:description" content="最近有被问到require import的区别和模块间如果相互引用会发生什么等问题。 思考了一会，对于模块间相互引用，应该内部进行了处理，只是觉得应该，说不出一二三。而require则直说出是值复制，而import是引用。 发现自己在模块化方面了解的不多，赶紧搜资料恶补起来，并通过曾经的学习经历+恶补经历在这里记录下来。">
+<meta name="twitter:title" content="浅谈JS模块化和闭包">
+<meta name="twitter:description" content="最近有被问到require import的区别和模块间如果相互引用会发生什么等问题。 思考了一会，对于模块间相互引用，应该内部进行了处理，只是觉得应该，说不出一二三。而require则只说出是值复制，而import是引用。 发现自己在模块化方面了解的不多，赶紧搜资料恶补起来，并通过曾经的学习经历+恶补经历在这里记录下来。">
   
     <link rel="alternate" href="/atom.xml" title="周宇涛的网络日志" type="application/atom+xml">
   
@@ -83,7 +83,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      浅谈JS模块化
+      浅谈JS模块化和闭包
     </h1>
   
 
@@ -94,7 +94,7 @@
         <!-- Table of Contents -->
         
         <p>最近有被问到<code>require import的区别</code>和<code>模块间如果相互引用会发生什么</code>等问题。</p>
-<p>思考了一会，对于模块间相互引用，应该内部进行了处理，只是觉得应该，说不出一二三。而<code>require</code>则直说出是值复制，而<code>import</code>是引用。</p>
+<p>思考了一会，对于模块间相互引用，应该内部进行了处理，只是觉得应该，说不出一二三。而<code>require</code>则只说出是值复制，而<code>import</code>是引用。</p>
 <p>发现自己在模块化方面了解的不多，赶紧搜资料恶补起来，并通过曾经的学习经历+恶补经历在这里记录下来。</p>
 <a id="more"></a>
 <p>还记得一开始学习JS的时候，看的是Blue老师的教学视频(非常感谢Blue老师的优秀教程)。</p>
@@ -102,19 +102,27 @@
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// a.js</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">move</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="comment">// some code</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// b.js</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">init</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  move();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>然后在html中通过顺序引入进来:</p>
 <figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"a.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"b.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p>这样在当时按着视频教学学的时候，因为文件不多，所以也没有出现什么问题(bug)。</p>
-<p>但如果随着文件的增多，甚至是协同开发，那这样子非常容易发生变量的冲突，例如在<code>b.js</code>中写入<code>function move</code>，导致覆盖<code>a.js</code>中的<code>move</code>方法，因为这样污染了全局。</p>
+<p>这样在当时按着视频教学学的时候，因为文件不多(基本是单文件)，所以也没有出现什么问题(bug)。</p>
+<p>但随着文件的增多，甚至是协同开发，那这样子非常容易发生变量的冲突，例如在<code>b.js</code>中写入<code>function move</code>，导致覆盖<code>a.js</code>中的<code>move</code>方法，因为这样污染了全局。</p>
 <p>后来学习了jQuery，在每个文件中使用自执行函数(IIFE)，并暴露出当前文件的一个变量，看下面代码:</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> ModuleA = (<span class="function"><span class="keyword">function</span>(<span class="params">$</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    move: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">      <span class="comment">// some code</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)(jQuery);</span><br></pre></td></tr></table></figure>
 <p>这样规避了<code>move</code>方法的重名，每个文件只会暴露一个模块名到全局，但是这样子只是并没有根治全局污染，不过好好管理应该是没有什么太大的问题。</p>
 <blockquote>
 <p>这里引申一下，像上面的自执行函数，其实是一个匿名闭包，而闭包又会牵扯到垃圾回收。</p>
 </blockquote>
+<h2 id="闭包及垃圾回收机制"><a href="#闭包及垃圾回收机制" class="headerlink" title="闭包及垃圾回收机制"></a>闭包及垃圾回收机制</h2><h3 id="闭包"><a href="#闭包" class="headerlink" title="闭包"></a>闭包</h3><h4 id="简要"><a href="#简要" class="headerlink" title="简要"></a>简要</h4><ol>
+<li><p>函数foo中如果声明了函数bar和baz，在foo函数执行退出后，不会销毁函数bar和baz(不会销毁foo定义的局部变量)，并允许我们返回到外面，通过返回的变量来访问。<em>并且函数bar和baz中还可以访问到foo中声明的其他变量</em></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">bar</span>(<span class="params"></span>) </span>&#123;&#125;</span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">baz</span>(<span class="params"></span>) </span>&#123;&#125;</span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    bar: bar,</span><br><span class="line">    baz: baz,</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> f = foo(); <span class="comment">// 执行结束，不会销毁bar和baz</span></span><br><span class="line">f.bar(); <span class="comment">// 通过变量f访问</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>闭包可作为函数参数传递和结果返回，并且JS是事件驱动的，这应该也算是闭包的意义吧</p>
+</li>
+</ol>
+<p><strong> 未完 </strong></p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://maczyt.github.io/2019/01/23/浅谈JS模块化/" data-id="cjr98hpui00040kvvap5kk6os" class="article-share-link">分享</a>
+      <a data-url="https://maczyt.github.io/2019/01/23/浅谈JS模块化/" data-id="cjr9am4hm0000ecvvg3ntmkbh" class="article-share-link">分享</a>
       
       
       
@@ -201,42 +209,24 @@
 
   
     
-  
+    <div class="widget-wrap">
     
-
-  
-    
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title recent-posts">最新文章</h3>
-    <div class="widget">
-      <ul>
-        
-          <li>
-            <a href="/2019/01/23/浅谈JS模块化/">浅谈JS模块化</a>
-          </li>
-        
-          <li>
-            <a href="/2019/01/20/深入浅出Promise/">深入浅出Promise</a>
-          </li>
-        
-          <li>
-            <a href="/2019/01/16/JS基础知识梳理/">JS基础知识梳理(一)</a>
-          </li>
-        
-          <li>
-            <a href="/2019/01/14/从microTask、macroTask到async-await简单了解/">从microTask、macroTask到async-await简单了解</a>
-          </li>
-        
-          <li>
-            <a href="/2018/12/30/手工实现vue-router/">手工实现vue-router</a>
-          </li>
-        
-      </ul>
+      <div class="widget" id="toc-widget-fixed">
+      
+        <strong class="toc-title">文章目录</strong>
+        <div class="toc-widget-list">
+              <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#闭包及垃圾回收机制"><span class="toc-number">1.</span> <span class="toc-text">闭包及垃圾回收机制</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#闭包"><span class="toc-number">1.1.</span> <span class="toc-text">闭包</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#简要"><span class="toc-number">1.1.1.</span> <span class="toc-text">简要</span></a></li></ol></li></ol></li></ol>
+          </div>
+      </div>
     </div>
-  </div>
 
+  
+    
+
+  
+    
+  
+    
   
     
 

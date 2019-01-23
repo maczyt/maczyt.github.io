@@ -66,6 +66,105 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-浅谈JS模块化" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/01/23/浅谈JS模块化/" class="article-date">
+  <time datetime="2019-01-23T13:30:30.000Z" itemprop="datePublished">2019-01-23</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/01/23/浅谈JS模块化/">浅谈JS模块化</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>最近有被问到<code>require import的区别</code>和<code>模块间如果相互引用会发生什么</code>等问题。</p>
+<p>思考了一会，对于模块间相互引用，应该内部进行了处理，只是觉得应该，说不出一二三。而<code>require</code>则直说出是值复制，而<code>import</code>是引用。</p>
+<p>发现自己在模块化方面了解的不多，赶紧搜资料恶补起来，并通过曾经的学习经历+恶补经历在这里记录下来。</p>
+        
+          <p class="article-more-link">
+            <a href="/2019/01/23/浅谈JS模块化/#more">继续阅读全文 »</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://maczyt.github.io/2019/01/23/浅谈JS模块化/" data-id="cjr98hpui00040kvvap5kk6os" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JS/">JS</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/基础/">基础</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+ 
+
+
+  
+    <article id="post-深入浅出Promise" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/01/20/深入浅出Promise/" class="article-date">
+  <time datetime="2019-01-20T10:28:42.000Z" itemprop="datePublished">2019-01-20</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/01/20/深入浅出Promise/">深入浅出Promise</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>之前说过买了本小册，在小册的讨论组中有人提出了<code>new Promise的RESOLVE</code>和<code>Promise.resolve</code>会有不同的执行效果。一时不明白，后在<code>stackoverflow</code>上搜到了相关问题。举例:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> p = <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function"><span class="params">resolve</span> =&gt;</span> resolve(<span class="string">'author is maczyt'</span>));</span><br><span class="line"></span><br><span class="line"><span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function"><span class="params">resolve</span> =&gt;</span> &#123;</span><br><span class="line">  resolve(p)</span><br><span class="line">&#125;).then(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="number">1</span>);</span><br><span class="line">&#125;);</span><br><span class="line"><span class="built_in">Promise</span>.resolve(p).then(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="number">2</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>一开始我按照微任务的添加顺序得到答案应该是 1、2, 但通过执行得到的答案是 2、1</p>
+<p>但是让我们看看下面的例子:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> p = <span class="string">'author is maczyt'</span>; <span class="comment">// p不是promise对象</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function"><span class="params">resolve</span> =&gt;</span> &#123;</span><br><span class="line">  resolve(p)</span><br><span class="line">&#125;).then(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="number">1</span>);</span><br><span class="line">&#125;);</span><br><span class="line"><span class="built_in">Promise</span>.resolve(p).then(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="number">2</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>大家猜猜这个输出顺序又是什么? <code>// 答案为: 1、2</code><br>可以看出这个是按照微任务的执行顺序执行的。</p>
+<p>为何执行效果会刚好相反呢? 作为志向进入某爸爸公司的我，当然得知其然而知其所以然。😁</p>
+<p>大家请往下看。</p>
+        
+          <p class="article-more-link">
+            <a href="/2019/01/20/深入浅出Promise/#more">继续阅读全文 »</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://maczyt.github.io/2019/01/20/深入浅出Promise/" data-id="cjr98hpum00050kvvpvdfi47v" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JS/">JS</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/基础/">基础</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/异步/">异步</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+ 
+
+
+  
     <article id="post-JS基础知识梳理" class="article article-type-post" itemscope="" itemprop="blogPost">
   <div class="article-meta">
     <a href="/2019/01/16/JS基础知识梳理/" class="article-date">
@@ -97,7 +196,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://maczyt.github.io/2019/01/16/JS基础知识梳理/" data-id="cjr0mts800001i0vvrofzjld5" class="article-share-link">分享</a>
+      <a data-url="https://maczyt.github.io/2019/01/16/JS基础知识梳理/" data-id="cjr98hpu700010kvvl1smmja9" class="article-share-link">分享</a>
       
       
       
@@ -142,7 +241,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://maczyt.github.io/2019/01/14/从microTask、macroTask到async-await简单了解/" data-id="cjr0mts870003i0vv7vvnnede" class="article-share-link">分享</a>
+      <a data-url="https://maczyt.github.io/2019/01/14/从microTask、macroTask到async-await简单了解/" data-id="cjr98hpuf00030kvvqywdu87n" class="article-share-link">分享</a>
       
       
       
@@ -187,7 +286,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://maczyt.github.io/2018/12/30/手工实现vue-router/" data-id="cjr0mts9a000hi0vvpsg8zy3g" class="article-share-link">分享</a>
+      <a data-url="https://maczyt.github.io/2018/12/30/手工实现vue-router/" data-id="cjr98hpvo000r0kvvu898t1jo" class="article-share-link">分享</a>
       
       
       
@@ -234,7 +333,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://maczyt.github.io/2018/12/29/JS中Deep-Clone的几种方式/" data-id="cjr0mts7p0000i0vvqb82p6gv" class="article-share-link">分享</a>
+      <a data-url="https://maczyt.github.io/2018/12/29/JS中Deep-Clone的几种方式/" data-id="cjr98hptv00000kvv8nbbeh3k" class="article-share-link">分享</a>
       
       
       
@@ -281,7 +380,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title tagcloud">标签云</h3>
     <div class="widget tagcloud">
-      <a href="/tags/JS/" style="font-size: 25px;">JS</a> <a href="/tags/Router/" style="font-size: 14px;">Router</a> <a href="/tags/Vue-js/" style="font-size: 14px;">Vue.js</a> <a href="/tags/基础/" style="font-size: 14px;">基础</a> <a href="/tags/基础知识/" style="font-size: 14px;">基础知识</a> <a href="/tags/异步/" style="font-size: 14px;">异步</a> <a href="/tags/面试/" style="font-size: 14px;">面试</a>
+      <a href="/tags/JS/" style="font-size: 25px;">JS</a> <a href="/tags/Router/" style="font-size: 14px;">Router</a> <a href="/tags/Vue-js/" style="font-size: 14px;">Vue.js</a> <a href="/tags/基础/" style="font-size: 21.33px;">基础</a> <a href="/tags/基础知识/" style="font-size: 14px;">基础知识</a> <a href="/tags/异步/" style="font-size: 17.67px;">异步</a> <a href="/tags/面试/" style="font-size: 14px;">面试</a>
     </div>
   </div>
 
@@ -291,6 +390,14 @@
     <h3 class="widget-title recent-posts">最新文章</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2019/01/23/浅谈JS模块化/">浅谈JS模块化</a>
+          </li>
+        
+          <li>
+            <a href="/2019/01/20/深入浅出Promise/">深入浅出Promise</a>
+          </li>
         
           <li>
             <a href="/2019/01/16/JS基础知识梳理/">JS基础知识梳理(一)</a>
@@ -304,10 +411,6 @@
             <a href="/2018/12/30/手工实现vue-router/">手工实现vue-router</a>
           </li>
         
-          <li>
-            <a href="/2018/12/29/JS中Deep-Clone的几种方式/">JS中Deep Clone的几种方式</a>
-          </li>
-        
       </ul>
     </div>
   </div>
@@ -317,7 +420,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title archive">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a><span class="archive-list-count">2</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a><span class="archive-list-count">2</span></li></ul>
     </div>
   </div>
 

@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+  <title>如何动手创建一个简单的MVVM框架 | 周宇涛的网络日志</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="最近有刷面试题，在刷的过程中，发现如果把下面题目考察的原理结合起来即可实现一个简单的 MVVM 框架。 注: 下面不会给出直接答案，只是我的一些历程。  面试题Vue 中是如何解析 template 字符串为 VNode 的?">
+<meta name="keywords" content="JS">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何动手创建一个简单的MVVM框架">
+<meta property="og:url" content="https://maczyt.github.io/2019/03/10/如何动手创建一个简单的MVVM框架/index.html">
+<meta property="og:site_name" content="周宇涛的网络日志">
+<meta property="og:description" content="最近有刷面试题，在刷的过程中，发现如果把下面题目考察的原理结合起来即可实现一个简单的 MVVM 框架。 注: 下面不会给出直接答案，只是我的一些历程。  面试题Vue 中是如何解析 template 字符串为 VNode 的?">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-03-10T15:51:04.012Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="如何动手创建一个简单的MVVM框架">
+<meta name="twitter:description" content="最近有刷面试题，在刷的过程中，发现如果把下面题目考察的原理结合起来即可实现一个简单的 MVVM 框架。 注: 下面不会给出直接答案，只是我的一些历程。  面试题Vue 中是如何解析 template 字符串为 VNode 的?">
+  
+    <link rel="alternate" href="/atom.xml" title="周宇涛的网络日志" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  
+    
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    
+    <div id="header-inner" class="inner">
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://maczyt.github.io"></form>
+      </div>
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">首页</a>
+        
+          <a class="main-nav-link" href="/archives">归档</a>
+        
+          <a class="main-nav-link" href="/about">关于</a>
+        
+      </nav>
+      
+    </div>
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">周宇涛的网络日志</a>
+      </h1>
+      
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-如何动手创建一个简单的MVVM框架" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/03/10/如何动手创建一个简单的MVVM框架/" class="article-date">
+  <time datetime="2019-03-10T14:43:49.000Z" itemprop="datePublished">2019-03-10</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      如何动手创建一个简单的MVVM框架
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!-- Table of Contents -->
+        
+        <blockquote>
+<p>最近有刷面试题，在刷的过程中，发现如果把下面题目考察的原理结合起来即可实现一个简单的 MVVM 框架。</p>
+<p>注: 下面不会给出直接答案，只是我的一些历程。</p>
+</blockquote>
+<h2 id="面试题"><a href="#面试题" class="headerlink" title="面试题"></a>面试题</h2><h3 id="Vue-中是如何解析-template-字符串为-VNode-的"><a href="#Vue-中是如何解析-template-字符串为-VNode-的" class="headerlink" title="Vue 中是如何解析 template 字符串为 VNode 的?"></a>Vue 中是如何解析 template 字符串为 VNode 的?</h3><a id="more"></a>
+<p>在接触 React 时候，我只了解到通过 babel 可以把 JSX 转成 VNode(通过调用 React.createElement 方法)，但是对其具体是如何转换的却不了解。</p>
+<p>很明显，回答失败。通过 github 上搜索 template+vnode 的关键词，让我搜到了<code>htm</code>库，发现简直就是我想要的。让我们看下用法:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> htm = <span class="built_in">require</span>(<span class="string">"htm"</span>);</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">h</span>(<span class="params">type, props, ...children</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> &#123; type, props, children &#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> html = htm.bind(h);</span><br><span class="line"></span><br><span class="line">html<span class="string">`</span></span><br><span class="line"><span class="string">  &lt;div&gt;Hello World&lt;/div&gt;</span></span><br><span class="line"><span class="string">`</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 返回: &#123; type: 'div', props: null, children: ['Hello World'] &#125;</span></span><br></pre></td></tr></table></figure>
+<p>htm 的大概思路是通过一个个字符遍历 template 字符串，并设置状态类型，当遇到&lt;&gt;表示进入元素状态，遇到=”‘则表示属性状态。子元素的关系通过数组的 push 和 slice 某一位来确定。<br>更详细可以看看这篇文章<a href="https://maczyt.github.io/2019/03/02/%E5%A6%82%E4%BD%95%E8%A7%A3%E6%9E%90template%E6%88%90VNODE/">如何解析 template 成 VNODE</a></p>
+<h3 id="为什么要用-VNode"><a href="#为什么要用-VNode" class="headerlink" title="为什么要用 VNode?"></a>为什么要用 VNode?</h3><p>我想这里应该是通过比较 VNode 和 DOM，并给出 VNode 的优势和 DOM 的不足。</p>
+<p>当前 Vue 和 React 都使用了 VNode，是出于什么原因，让两大目前最火热的框架都选择使用了 VNode 呢?</p>
+<p>这里我们直接看下写的比较好的文章吧. <a href="https://github.com/livoras/blog/issues/13" target="_blank" rel="noopener">深度剖析：如何实现一个 Virtual DOM 算法</a></p>
+<hr>
+<p>了解到上面知识的大致原理后，回顾了下 React 的 JSX 写法:</p>
+<ol>
+<li>当我们需要遍历列表</li>
+</ol>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">render() &#123;</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    &lt;ul&gt;</span><br><span class="line">      &#123;</span><br><span class="line">        list.map(<span class="function"><span class="params">item</span> =&gt;</span> &lt;li&gt;item&lt;<span class="regexp">/li&gt;)</span></span><br><span class="line"><span class="regexp">      &#125;</span></span><br><span class="line"><span class="regexp">    &lt;/u</span>l&gt;</span><br><span class="line">  )</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>当我们渲染值</li>
+</ol>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">render() &#123;</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    &lt;p&gt;&#123;&#123; msg &#125;&#125;&lt;<span class="regexp">/p&gt;</span></span><br><span class="line"><span class="regexp">  )</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br></pre></td></tr></table></figure>
+<hr>
+<p>思考了下，如果结合 ejs 等模板引擎(这些模板引擎大致的思路是结合 template+data-&gt;html-&gt;设置到 DOM 的 innerHTML)，先把数据填充进去，转变成 html 字符串。</p>
+<p>之后使用<code>htm</code>转成 VNode，再使用 Virtual Dom，使用 Virtual Dom 的 diff 和 patch，便可以实现了简单的 MVVM 体验。</p>
+<p>没错，就是这么简单，废话不多说，开干吧。</p>
+<h2 id="MVVM"><a href="#MVVM" class="headerlink" title="MVVM"></a>MVVM</h2><h3 id="模板引擎"><a href="#模板引擎" class="headerlink" title="模板引擎"></a>模板引擎</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 比如我们需要渲染数组列表: --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">ul</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">%</span> <span class="attr">for</span> (<span class="attr">let</span> <span class="attr">item</span> <span class="attr">of</span> <span class="attr">list</span>) &#123; %&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">li</span>&gt;</span><span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">%</span> &#125; %&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- 比如我们需要条件渲染 --&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">%</span> <span class="attr">if</span> (<span class="attr">condition</span>) &#123; %&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">span</span>&gt;</span>open<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">%</span> &#125; <span class="attr">else</span> &#123; %&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">span</span>&gt;</span>close<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">%</span> &#125; %&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- 比如我们需要渲染数据 --&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">p</span>&gt;</span><span class="tag">&lt;<span class="name">%=</span> <span class="attr">msg</span> %&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>我的思路的先处理逻辑运算如:(for,if 等), 通过正则<code>/&lt;%[^=]([^%]*)%&gt;/g</code>来匹配，并通过<code>str += 匹配内容</code>, 因为 exec 会含有 index 属性，所以匹配之前的 html 通过 slice 来获取，并拼接到 str。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> _str = <span class="string">'let str = "";\n'</span>;</span><br><span class="line"><span class="keyword">let</span> exec;</span><br><span class="line"><span class="keyword">let</span> index = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">let</span> content;</span><br><span class="line"><span class="keyword">while</span> ((exec = REG.exec(str))) &#123;</span><br><span class="line">  content = str_format(str.slice(index, exec.index));</span><br><span class="line">  <span class="keyword">if</span> (content) &#123;</span><br><span class="line">    _str += <span class="string">`str += '<span class="subst">$&#123;content&#125;</span>';\n`</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  _str += <span class="string">`<span class="subst">$&#123;str_format(exec[<span class="number">1</span>])&#125;</span>\n`</span>;</span><br><span class="line">  index = exec.index + exec[<span class="number">0</span>].length;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// some code</span></span><br></pre></td></tr></table></figure>
+<p>处理完逻辑的代码，通过正则<code>/&lt;%=([^%]*)%&gt;/g</code>直接对上面的字符串进行 replace 操作替换。</p>
+<p>具体代码: <a href="https://github.com/maczyt/dance/blob/master/template/template.js" target="_blank" rel="noopener">template.js</a></p>
+<h3 id="html-字符串-gt-VNode"><a href="#html-字符串-gt-VNode" class="headerlink" title="html 字符串 -&gt; VNode"></a>html 字符串 -&gt; VNode</h3><p>这里我们使用<a href="https://github.com/livoras/simple-virtual-dom" target="_blank" rel="noopener">simple-virtual-dom</a>库来实现虚拟 DOM 处理，我们对上面函数 h 做一点调整。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; el &#125; <span class="keyword">from</span> <span class="string">"simple-virtual-dom"</span>;</span><br><span class="line"><span class="keyword">import</span> htm <span class="keyword">from</span> <span class="string">"htm"</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">h</span>(<span class="params">tagName, props, ...children</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">new</span> el(tagName, props, children);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">const</span> html = htm.bind(h);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> vnode = html([html_str]);</span><br></pre></td></tr></table></figure>
+<p>这里我们就实现了<code>template+data</code> -&gt; <code>html str</code> -&gt; <code>VNode</code>的转换。使用 VNode 库提供的 render 转成具体的 DOM 并挂载到 document 上。</p>
+<p>但是我们貌似还没有对事件进行处理，这里我使用了事件委托机制，也就是挂载事件到 window 对象上进行监听处理。所以这里需要对<code>simple-virtual-dom</code>库的 element.js 做一点小调整.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 唯一Id</span></span><br><span class="line"><span class="keyword">let</span> uid = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Element</span>(<span class="params">tagName, props, children</span>) </span>&#123;</span><br><span class="line">  <span class="comment">// 给每个VNode增加uid</span></span><br><span class="line">  <span class="keyword">this</span>.uid = uid++;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Element.prototype.render = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">var</span> propName <span class="keyword">in</span> props) &#123;</span><br><span class="line">    <span class="keyword">var</span> propValue = props[propName];</span><br><span class="line">    <span class="comment">// 这里模仿vue的事件绑定</span></span><br><span class="line">    <span class="keyword">if</span> (propName.startsWith(<span class="string">"@"</span>)) &#123;</span><br><span class="line">      <span class="comment">// 事件处理</span></span><br><span class="line">      <span class="keyword">const</span> callback = (vm.$methods[propValue] || <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;&#125;).bind(vm);</span><br><span class="line">      delegate(<span class="built_in">window</span>, <span class="string">`[dance-el-<span class="subst">$&#123;<span class="keyword">this</span>.uid&#125;</span>]`</span>, propName.slice(<span class="number">1</span>), callback);</span><br><span class="line">      <span class="keyword">continue</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 添加uid属性, 为了事件代理</span></span><br><span class="line">  _.setAttr(el, <span class="string">"dance-el-"</span> + <span class="keyword">this</span>.uid, <span class="string">""</span>);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>这样，事件处理我们也解决好了，哦对了，对 delegate 实现原理感兴趣的可以阅读<a href="https://www.npmjs.com/package/delegate" target="_blank" rel="noopener">delegate</a>源码</p>
+<h3 id="如何更新呢"><a href="#如何更新呢" class="headerlink" title="如何更新呢?"></a>如何更新呢?</h3><p>这里我加入了 React 中的 setState，当我们调用这个方法，我们会得到新的 data 数据，这个时候再次触发<code>template+data</code> -&gt; <code>html str</code> -&gt; <code>VNode</code>的转换.</p>
+<p>然后使用 virtual dom 的 diff 和 patch 差异比较，修改只需改变的 DOM 元素。</p>
+<h3 id="整体实现"><a href="#整体实现" class="headerlink" title="整体实现"></a>整体实现</h3><p>大家可以点击这里进行查看<a href="https://github.com/maczyt/dance" target="_blank" rel="noopener">MVVM</a></p>
+<blockquote>
+<p>如果可以，还请给个 star，star 是面试加分项。😂</p>
+</blockquote>
+<h3 id="基于我们创建的-MVVM-的例子"><a href="#基于我们创建的-MVVM-的例子" class="headerlink" title="基于我们创建的 MVVM 的例子"></a>基于我们创建的 MVVM 的例子</h3><ol>
+<li><a href="https://maczyt.github.io/dance/count.html">Count</a></li>
+<li><a href="https://maczyt.github.io/dance/todo.html">Todo App</a> <em>有一点 bug, 😅</em></li>
+</ol>
+<blockquote>
+<p>水平有限，难免有不对之处，还请指出，谢谢.😄</p>
+</blockquote>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://maczyt.github.io/2019/03/10/如何动手创建一个简单的MVVM框架/" data-id="cjt317udi0001lsvvj3269lq6" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JS/">JS</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+ <script src="/jquery/jquery.min.js"></script>
+  <div id="random_posts">
+    <h2>推荐文章</h2>
+    <div class="random_posts_ul">
+      <script>
+          var random_count =4
+          var site = {BASE_URI:'/'};
+          function load_random_posts(obj) {
+              var arr=site.posts;
+              if (!obj) return;
+              // var count = $(obj).attr('data-count') || 6;
+              for (var i, tmp, n = arr.length; n; i = Math.floor(Math.random() * n), tmp = arr[--n], arr[n] = arr[i], arr[i] = tmp);
+              arr = arr.slice(0, random_count);
+              var html = '<ul>';
+            
+              for(var j=0;j<arr.length;j++){
+                var item=arr[j];
+                html += '<li><strong>' + 
+                item.date + ':&nbsp;&nbsp;<a href="' + (site.BASE_URI+item.uri) + '">' + 
+                (item.title || item.uri) + '</a></strong>';
+                if(item.excerpt){
+                  html +='<div class="post-excerpt">'+item.excerpt+'</div>';
+                }
+                html +='</li>';
+                
+              }
+              $(obj).html(html + '</ul>');
+          }
+          $('.random_posts_ul').each(function () {
+              var c = this;
+              if (!site.posts || !site.posts.length){
+                  $.getJSON(site.BASE_URI + 'js/posts.js',function(json){site.posts = json;load_random_posts(c)});
+              } 
+               else{
+                load_random_posts(c);
+              }
+          });
+      </script>
+    </div>
+  </div>
+
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2019/03/02/如何解析template成VNODE/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇</strong>
+      <div class="article-nav-title">如何解析template成VNODE</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+ 
+     
+  <div class="comments" id="comments">
+    
+     
+       
+      <div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>
+    
+       
+      
+      
+  </div>
+ 
+  
+
+</section>
+           
+    <aside id="sidebar">
+  
+    
+
+  
+    
+    <div class="widget-wrap">
+    
+      <div class="widget" id="toc-widget-fixed">
+      
+        <strong class="toc-title">文章目录</strong>
+        <div class="toc-widget-list">
+              <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#面试题"><span class="toc-number">1.</span> <span class="toc-text">面试题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Vue-中是如何解析-template-字符串为-VNode-的"><span class="toc-number">1.1.</span> <span class="toc-text">Vue 中是如何解析 template 字符串为 VNode 的?</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#为什么要用-VNode"><span class="toc-number">1.2.</span> <span class="toc-text">为什么要用 VNode?</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#MVVM"><span class="toc-number">2.</span> <span class="toc-text">MVVM</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#模板引擎"><span class="toc-number">2.1.</span> <span class="toc-text">模板引擎</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#html-字符串-gt-VNode"><span class="toc-number">2.2.</span> <span class="toc-text">html 字符串 -&gt; VNode</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#如何更新呢"><span class="toc-number">2.3.</span> <span class="toc-text">如何更新呢?</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#整体实现"><span class="toc-number">2.4.</span> <span class="toc-text">整体实现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#基于我们创建的-MVVM-的例子"><span class="toc-number">2.5.</span> <span class="toc-text">基于我们创建的 MVVM 的例子</span></a></li></ol></li></ol>
+          </div>
+      </div>
+    </div>
+
+  
+    
+
+  
+    
+  
+    
+  
+    
+
+  
+    
+  
+    <!--微信公众号二维码-->
+
+
+  
+</aside>
+
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-left">
+      &copy; 2014 - 2019 maczyt&nbsp;|&nbsp;
+      主题 <a href="https://github.com/giscafer/hexo-theme-cafe/" target="_blank">Cafe</a>
+    </div>
+     <div id="footer-right">
+      联系方式&nbsp;|&nbsp;369280416@qq.com
+    </div>
+  </div>
+</footer>
+ <script src="/jquery/jquery.min.js"></script>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">首页</a>
+  
+    <a href="/archives" class="mobile-nav-link">归档</a>
+  
+    <a href="/about" class="mobile-nav-link">关于</a>
+  
+</nav>
+    <img class="back-to-top-btn" src="/images/fly-to-top.png">
+<script>
+// Elevator script included on the page, already.
+window.onload = function() {
+  var elevator = new Elevator({
+    selector:'.back-to-top-btn',
+    element: document.querySelector('.back-to-top-btn'),
+    duration: 1000 // milliseconds
+  });
+}
+</script>
+      
+
+  
+    <script>
+      var cloudTieConfig = {
+        url: document.location.href, 
+        sourceId: "",
+        productKey: "e2fb4051c49842688ce669e634bc983f",
+        target: "cloud-tie-wrapper"
+      };
+    </script>
+    <script src="https://img1.ws.126.net/f2e/tie/yun/sdk/loader.js"></script>
+    
+
+  
+
+
+
+
+
+
+
+<!-- author:forvoid begin -->
+<!-- author:forvoid begin -->
+
+<!-- author:forvoid end -->
+
+<!-- author:forvoid end -->
+
+
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      })
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      })
+    </script>
+    <script type="text/javascript" src="https://cdn.rawgit.com/mathjax/MathJax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+ <script src="/js/is.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+<script src="/js/elevator.js"></script>
+  </div>
+</body>
+</html>

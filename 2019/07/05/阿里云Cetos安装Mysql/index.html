@@ -3,22 +3,20 @@
 <head><meta name="generator" content="Hexo 3.8.0">
   <meta charset="utf-8">
   
-  <title>Tip. 为什么我们推荐style放在head中，而script放在body尾? | 周宇涛的网络日志</title>
+  <title>阿里云Cetos安装Mysql | 周宇涛的网络日志</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="经常看到网上关于性能优化提到应该把样式style放到head中，把脚本script放到body中。 反正也不知道为什么，当别人问起，也就这么回答。 今天让我们看看背后的原理是什么呢?">
-<meta name="keywords" content="TIP">
+  <meta name="description" content="安装1234$ yum install mysql$ yum install mysql-devel$ yum install mariadb-server mariadb  # 因为甲骨文公司收购了MySQL后，有将MySQL闭源的潜在风险，因此社区采用分支的方式来避开这个风险# 但是mariadb和mysql是一样的 命令123456$ systemctl start mariadb # 启动">
+<meta name="keywords" content="环境配置">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Tip. 为什么我们推荐style放在head中，而script放在body尾?">
-<meta property="og:url" content="https://maczyt.github.io/2019/03/20/Tip-为什么我们推荐style放在head中，而script放在body尾/index.html">
+<meta property="og:title" content="阿里云Cetos安装Mysql">
+<meta property="og:url" content="https://maczyt.github.io/2019/07/05/阿里云Cetos安装Mysql/index.html">
 <meta property="og:site_name" content="周宇涛的网络日志">
-<meta property="og:description" content="经常看到网上关于性能优化提到应该把样式style放到head中，把脚本script放到body中。 反正也不知道为什么，当别人问起，也就这么回答。 今天让我们看看背后的原理是什么呢?">
+<meta property="og:description" content="安装1234$ yum install mysql$ yum install mysql-devel$ yum install mariadb-server mariadb  # 因为甲骨文公司收购了MySQL后，有将MySQL闭源的潜在风险，因此社区采用分支的方式来避开这个风险# 但是mariadb和mysql是一样的 命令123456$ systemctl start mariadb # 启动">
 <meta property="og:locale" content="default">
-<meta property="og:image" content="https://maczyt.github.io/2019/03/20/Tip-为什么我们推荐style放在head中，而script放在body尾/123.png">
-<meta property="og:updated_time" content="2019-03-20T13:53:56.273Z">
+<meta property="og:updated_time" content="2019-07-05T14:22:15.579Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Tip. 为什么我们推荐style放在head中，而script放在body尾?">
-<meta name="twitter:description" content="经常看到网上关于性能优化提到应该把样式style放到head中，把脚本script放到body中。 反正也不知道为什么，当别人问起，也就这么回答。 今天让我们看看背后的原理是什么呢?">
-<meta name="twitter:image" content="https://maczyt.github.io/2019/03/20/Tip-为什么我们推荐style放在head中，而script放在body尾/123.png">
+<meta name="twitter:title" content="阿里云Cetos安装Mysql">
+<meta name="twitter:description" content="安装1234$ yum install mysql$ yum install mysql-devel$ yum install mariadb-server mariadb  # 因为甲骨文公司收购了MySQL后，有将MySQL闭源的潜在风险，因此社区采用分支的方式来避开这个风险# 但是mariadb和mysql是一样的 命令123456$ systemctl start mariadb # 启动">
   
     <link rel="alternate" href="/atom.xml" title="周宇涛的网络日志" type="application/atom+xml">
   
@@ -71,10 +69,10 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main"><article id="post-Tip-为什么我们推荐style放在head中，而script放在body尾" class="article article-type-post" itemscope="" itemprop="blogPost">
+        <section id="main"><article id="post-阿里云Cetos安装Mysql" class="article article-type-post" itemscope="" itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2019/03/20/Tip-为什么我们推荐style放在head中，而script放在body尾/" class="article-date">
-  <time datetime="2019-03-20T13:40:52.000Z" itemprop="datePublished">2019-03-20</time>
+    <a href="/2019/07/05/阿里云Cetos安装Mysql/" class="article-date">
+  <time datetime="2019-07-05T13:56:08.000Z" itemprop="datePublished">2019-07-05</time>
 </a>
     
   </div>
@@ -85,7 +83,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      Tip. 为什么我们推荐style放在head中，而script放在body尾?
+      阿里云Cetos安装Mysql
     </h1>
   
 
@@ -95,28 +93,20 @@
       
         <!-- Table of Contents -->
         
-        <p>经常看到网上关于性能优化提到应该把样式<sup>style</sup>放到<code>head</code>中，把脚本<sup>script</sup>放到<code>body</code>中。</p>
-<p>反正也不知道为什么，当别人问起，也就这么回答。</p>
-<p>今天让我们看看背后的原理是什么呢?</p>
-<a id="more"></a>
-<p>让我偷一张来自大神小册的图。</p>
-<p><img src="123.png" alt="浏览器渲染机制"></p>
-<ul>
-<li>解析 DOM 和解析 CSSOM 的过程是<strong>并行的</strong></li>
-<li>浏览器处理的是布局渲染树，也就是 DOM 和 CSSOM 结合后的。</li>
-<li>浏览器在构建 CSSOM 的过程中，<strong>不会渲染任何已处理的内容</strong>，所以我们需要尽早的加载样式，以便缩短首次渲染时间。</li>
-<li>当解析到 JS 时，浏览器渲染会把控制权交给 JS 引擎，这个时候会阻塞 DOM 渲染。所以应该尽晚的加载脚本。</li>
-<li>😳</li>
+        <h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> yum install mysql</span><br><span class="line"><span class="meta">$</span> yum install mysql-devel</span><br><span class="line"><span class="meta">$</span> yum install mariadb-server mariadb  # 因为甲骨文公司收购了MySQL后，有将MySQL闭源的潜在风险，因此社区采用分支的方式来避开这个风险</span><br><span class="line"><span class="meta">#</span> 但是mariadb和mysql是一样的</span><br></pre></td></tr></table></figure>
+<h2 id="命令"><a href="#命令" class="headerlink" title="命令"></a>命令</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> systemctl start mariadb # 启动</span><br><span class="line"><span class="meta">$</span> systemctl stop mariadb # 停止</span><br><span class="line"><span class="meta">$</span> systemctl restart mariadb # 重启</span><br><span class="line"><span class="meta">$</span> systemctl enable mariadb # 开机启动</span><br><span class="line"></span><br><span class="line"><span class="meta">$</span> mysql -u root -p</span><br></pre></td></tr></table></figure>
+<h2 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h2><ul>
+<li>设置编码</li>
 </ul>
-
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> vim /etc/my.cnf</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> 最后加上</span><br><span class="line">[mysql]</span><br><span class="line">default-character-set=utf8</span><br><span class="line"></span><br><span class="line"><span class="meta">$</span> systemctl restart mariadb # 重启</span><br></pre></td></tr></table></figure>
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://maczyt.github.io/2019/03/20/Tip-为什么我们推荐style放在head中，而script放在body尾/" data-id="cjxq53fdd0000wsvvvjhk7763" class="article-share-link">分享</a>
+      <a data-url="https://maczyt.github.io/2019/07/05/阿里云Cetos安装Mysql/" data-id="cjxq5wh8i00001wvvp706h6qq" class="article-share-link">分享</a>
       
       
       
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TIP/">TIP</a></li></ul>
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/环境配置/">环境配置</a></li></ul>
 
     </footer>
   </div>
@@ -166,19 +156,10 @@
     
 <nav id="article-nav">
   
-    <a href="/2019/03/21/转-学习正则表达式/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">上一篇</strong>
-      <div class="article-nav-title">
-        
-          [转] 学习正则表达式
-        
-      </div>
-    </a>
   
-  
-    <a href="/2019/03/10/如何动手创建一个简单的MVVM框架/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/2019/03/21/转-学习正则表达式/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">下一篇</strong>
-      <div class="article-nav-title">如何动手创建一个简单的MVVM框架</div>
+      <div class="article-nav-title">[转] 学习正则表达式</div>
     </a>
   
 </nav>
@@ -210,42 +191,24 @@
 
   
     
-  
+    <div class="widget-wrap">
     
-
-  
-    
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title recent-posts">最新文章</h3>
-    <div class="widget">
-      <ul>
-        
-          <li>
-            <a href="/2019/07/05/阿里云Cetos安装Mysql/">阿里云Cetos安装Mysql</a>
-          </li>
-        
-          <li>
-            <a href="/2019/03/21/转-学习正则表达式/">[转] 学习正则表达式</a>
-          </li>
-        
-          <li>
-            <a href="/2019/03/20/Tip-为什么我们推荐style放在head中，而script放在body尾/">Tip. 为什么我们推荐style放在head中，而script放在body尾?</a>
-          </li>
-        
-          <li>
-            <a href="/2019/03/10/如何动手创建一个简单的MVVM框架/">如何动手创建一个简单的MVVM框架</a>
-          </li>
-        
-          <li>
-            <a href="/2019/03/02/如何解析template成VNODE/">如何解析template成VNODE</a>
-          </li>
-        
-      </ul>
+      <div class="widget" id="toc-widget-fixed">
+      
+        <strong class="toc-title">文章目录</strong>
+        <div class="toc-widget-list">
+              <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#安装"><span class="toc-number">1.</span> <span class="toc-text">安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#命令"><span class="toc-number">2.</span> <span class="toc-text">命令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#配置"><span class="toc-number">3.</span> <span class="toc-text">配置</span></a></li></ol>
+          </div>
+      </div>
     </div>
-  </div>
 
+  
+    
+
+  
+    
+  
+    
   
     
 

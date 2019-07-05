@@ -147,7 +147,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://maczyt.github.io/2019/03/10/如何动手创建一个简单的MVVM框架/" data-id="cjtioweqa000a2gvv00lwyah9" class="article-share-link">分享</a>
+      <a data-url="https://maczyt.github.io/2019/03/10/如何动手创建一个简单的MVVM框架/" data-id="cjxq53fe30003wsvv86iuispm" class="article-share-link">分享</a>
       
       
       
@@ -231,6 +231,8 @@
        
       
       
+           <div id="gitment_comments"></div>
+    
   </div>
  
   
@@ -332,6 +334,22 @@ window.onload = function() {
 
 <!-- author:forvoid begin -->
 <!-- author:forvoid begin -->
+
+  <link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+  <script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script> 
+  <script>
+  var gitment = new Gitment({
+    // id: '页面 ID', // 可选。默认为 location.href
+    owner: 'maczyt',
+    repo: 'maczyt.github.io',
+    oauth: {
+    client_id: 'ec909c607ca0603ee69f',
+    client_secret: '611d57c463dd5cbcef431a48c0ff777679387238',
+    }
+  })
+  gitment.render(document.getElementById("gitment_comments"))
+</script>
+
 
 <!-- author:forvoid end -->
 

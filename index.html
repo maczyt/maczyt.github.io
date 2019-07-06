@@ -96,10 +96,18 @@
 <li>设置编码</li>
 </ul>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> vim /etc/my.cnf</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> 最后加上</span><br><span class="line">[mysql]</span><br><span class="line">default-character-set=utf8</span><br><span class="line"></span><br><span class="line"><span class="meta">$</span> systemctl restart mariadb # 重启</span><br></pre></td></tr></table></figure>
+<ul>
+<li>设置密码(设置为root)<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">mysql&gt;</span> set password for 'root'@'localhost' =password('root');</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>此时外部服务器无法通过tomcat访问该服务器的数据库，需要设置:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">mysql&gt;</span> grant all privileges on *.* to root@'%'identified by 'password';</span><br></pre></td></tr></table></figure>
+<p>并且需要添加安全组规则，开放3306端口</p>
+
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://maczyt.github.io/2019/07/05/阿里云Cetos安装Mysql/" data-id="cjxq5wh8i00001wvvp706h6qq" class="article-share-link">分享</a>
+      <a data-url="https://maczyt.github.io/2019/07/05/阿里云Cetos安装Mysql/" data-id="cjxqzxptu000mh8vvnramtkw0" class="article-share-link">分享</a>
       
       
       
@@ -147,7 +155,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://maczyt.github.io/2019/03/21/转-学习正则表达式/" data-id="cjxq53fj60014wsvv9rk1cno6" class="article-share-link">分享</a>
+      <a data-url="https://maczyt.github.io/2019/03/21/转-学习正则表达式/" data-id="cjxqzxpvl0013h8vv2e3rw14y" class="article-share-link">分享</a>
       
       
       
@@ -194,7 +202,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://maczyt.github.io/2019/03/20/Tip-为什么我们推荐style放在head中，而script放在body尾/" data-id="cjxq53fdd0000wsvvvjhk7763" class="article-share-link">分享</a>
+      <a data-url="https://maczyt.github.io/2019/03/20/Tip-为什么我们推荐style放在head中，而script放在body尾/" data-id="cjxqzxptm000jh8vvizih5zwx" class="article-share-link">分享</a>
       
       
       
@@ -243,7 +251,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://maczyt.github.io/2019/03/10/如何动手创建一个简单的MVVM框架/" data-id="cjxq53fe30003wsvv86iuispm" class="article-share-link">分享</a>
+      <a data-url="https://maczyt.github.io/2019/03/10/如何动手创建一个简单的MVVM框架/" data-id="cjxqzxpt60008h8vvoqeml9ea" class="article-share-link">分享</a>
       
       
       
@@ -292,7 +300,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://maczyt.github.io/2019/03/02/如何解析template成VNODE/" data-id="cjxq53fec0005wsvvns2jp0nq" class="article-share-link">分享</a>
+      <a data-url="https://maczyt.github.io/2019/03/02/如何解析template成VNODE/" data-id="cjxqzxpt8000ah8vvrqv6oloa" class="article-share-link">分享</a>
       
       
       
@@ -339,7 +347,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://maczyt.github.io/2019/01/23/浅谈JS模块化/" data-id="cjxq53fem0009wsvvl5lgeb1n" class="article-share-link">分享</a>
+      <a data-url="https://maczyt.github.io/2019/01/23/浅谈JS模块化/" data-id="cjxqzxptb000ch8vv1vxctgzl" class="article-share-link">分享</a>
       
       
       
@@ -391,7 +399,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://maczyt.github.io/2019/01/20/深入浅出Promise/" data-id="cjxq53fei0008wsvvr02432ym" class="article-share-link">分享</a>
+      <a data-url="https://maczyt.github.io/2019/01/20/深入浅出Promise/" data-id="cjxqzxpth000eh8vv7pgxl4g8" class="article-share-link">分享</a>
       
       
       
@@ -436,7 +444,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://maczyt.github.io/2019/01/16/JS基础知识梳理/" data-id="cjxq53fdu0001wsvv2y9du89a" class="article-share-link">分享</a>
+      <a data-url="https://maczyt.github.io/2019/01/16/JS基础知识梳理/" data-id="cjxqzxpsb0000h8vvvwgqa9ue" class="article-share-link">分享</a>
       
       
       
@@ -481,7 +489,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://maczyt.github.io/2019/01/14/从microTask、macroTask到async-await简单了解/" data-id="cjxq53fgk000twsvv4gh3kvqn" class="article-share-link">分享</a>
+      <a data-url="https://maczyt.github.io/2019/01/14/从microTask、macroTask到async-await简单了解/" data-id="cjxqzxpt30007h8vvw84lhlg1" class="article-share-link">分享</a>
       
       
       
@@ -526,7 +534,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://maczyt.github.io/2018/12/30/手工实现vue-router/" data-id="cjxq53fgo000uwsvvx6fkahi7" class="article-share-link">分享</a>
+      <a data-url="https://maczyt.github.io/2018/12/30/手工实现vue-router/" data-id="cjxqzxpuj000xh8vvrkpz4fvm" class="article-share-link">分享</a>
       
       
       

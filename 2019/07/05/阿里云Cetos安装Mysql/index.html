@@ -13,7 +13,7 @@
 <meta property="og:site_name" content="周宇涛的网络日志">
 <meta property="og:description" content="安装1234$ yum install mysql$ yum install mysql-devel$ yum install mariadb-server mariadb  # 因为甲骨文公司收购了MySQL后，有将MySQL闭源的潜在风险，因此社区采用分支的方式来避开这个风险# 但是mariadb和mysql是一样的 命令123456$ systemctl start mariadb # 启动">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-07-05T14:22:15.579Z">
+<meta property="og:updated_time" content="2019-07-06T03:56:45.837Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="阿里云Cetos安装Mysql">
 <meta name="twitter:description" content="安装1234$ yum install mysql$ yum install mysql-devel$ yum install mariadb-server mariadb  # 因为甲骨文公司收购了MySQL后，有将MySQL闭源的潜在风险，因此社区采用分支的方式来避开这个风险# 但是mariadb和mysql是一样的 命令123456$ systemctl start mariadb # 启动">
@@ -99,10 +99,18 @@
 <li>设置编码</li>
 </ul>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> vim /etc/my.cnf</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> 最后加上</span><br><span class="line">[mysql]</span><br><span class="line">default-character-set=utf8</span><br><span class="line"></span><br><span class="line"><span class="meta">$</span> systemctl restart mariadb # 重启</span><br></pre></td></tr></table></figure>
+<ul>
+<li>设置密码(设置为root)<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">mysql&gt;</span> set password for 'root'@'localhost' =password('root');</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>此时外部服务器无法通过tomcat访问该服务器的数据库，需要设置:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">mysql&gt;</span> grant all privileges on *.* to root@'%'identified by 'password';</span><br></pre></td></tr></table></figure>
+<p>并且需要添加安全组规则，开放3306端口</p>
+
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://maczyt.github.io/2019/07/05/阿里云Cetos安装Mysql/" data-id="cjxq5wh8i00001wvvp706h6qq" class="article-share-link">分享</a>
+      <a data-url="https://maczyt.github.io/2019/07/05/阿里云Cetos安装Mysql/" data-id="cjxqzxptu000mh8vvnramtkw0" class="article-share-link">分享</a>
       
       
       

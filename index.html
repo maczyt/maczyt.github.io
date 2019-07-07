@@ -66,6 +66,64 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-Cetos7安装nginx三两事" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/07/07/Cetos7安装nginx三两事/" class="article-date">
+  <time datetime="2019-07-07T06:44:40.000Z" itemprop="datePublished">2019-07-07</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/07/07/Cetos7安装nginx三两事/">Cetos7安装nginx三两事</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!-- Table of Contents -->
+        
+        <h2 id="Nginx安装"><a href="#Nginx安装" class="headerlink" title="Nginx安装"></a>Nginx安装</h2><p>阿里云cetos7已经默认添加了nginx的yum源，可以通过<code>yum search nginx</code>确认。</p>
+<p>如果没有，则可以通过运行<code>rpm -Uvh http://nginx.org/packages/centos/7/noarch/RPMS/nginx-release-centos-7-0.el7.ngx.noarch.rpm</code>进行添加。</p>
+<h2 id="命令"><a href="#命令" class="headerlink" title="命令"></a>命令</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> systemctl start nginx.service # 启动nginx服务</span><br><span class="line"><span class="meta">$</span> systemctl stop nginx.service # 关闭</span><br><span class="line"><span class="meta">$</span> systemctl enable nginx.service # 开机</span><br></pre></td></tr></table></figure>
+<h2 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h2><blockquote>
+<p>由于我开启了8001的安全组规则，所以我使用8001端口来演示展示一个Hello Nginx页面</p>
+</blockquote>
+<p>由于是使用yum安装的，所以让我们看看nginx安装到了哪?</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> whereis nginx # nginx: /usr/sbin/nginx /usr/lib64/nginx /etc/nginx /usr/share/nginx /usr/share/man/man8/nginx.8.gz /usr/share/man/man3/nginx.3pm.gz</span><br></pre></td></tr></table></figure>
+<p>然后我发现<code>/etc/nginx</code>下面有配置文件<code>nginx.conf</code>，应该就是它了, 让我们看下文件内容<code>cat nginx.conf</code></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span> For more information on configuration, see:</span><br><span class="line"><span class="meta">#</span>   * Official English Documentation: http://nginx.org/en/docs/</span><br><span class="line"><span class="meta">#</span>   * Official Russian Documentation: http://nginx.org/ru/docs/</span><br><span class="line"></span><br><span class="line">user nginx;</span><br><span class="line">worker_processes auto;</span><br><span class="line">error_log /var/log/nginx/error.log;</span><br><span class="line">pid /run/nginx.pid;</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> Load dynamic modules. See /usr/share/nginx/README.dynamic.</span><br><span class="line">include /usr/share/nginx/modules/*.conf;</span><br><span class="line"></span><br><span class="line">events &#123;</span><br><span class="line">    worker_connections 1024;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">http &#123;</span><br><span class="line">    log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '</span><br><span class="line">                      '$status $body_bytes_sent "$http_referer" '</span><br><span class="line">                      '"$http_user_agent" "$http_x_forwarded_for"';</span><br><span class="line"></span><br><span class="line">    access_log  /var/log/nginx/access.log  main;</span><br><span class="line"></span><br><span class="line">    sendfile            on;</span><br><span class="line">    tcp_nopush          on;</span><br><span class="line">    tcp_nodelay         on;</span><br><span class="line">    keepalive_timeout   65;</span><br><span class="line">    types_hash_max_size 2048;</span><br><span class="line"></span><br><span class="line">    include             /etc/nginx/mime.types;</span><br><span class="line">    default_type        application/octet-stream;</span><br><span class="line"></span><br><span class="line">    # Load modular configuration files from the /etc/nginx/conf.d directory.</span><br><span class="line">    # See http://nginx.org/en/docs/ngx_core_module.html#include</span><br><span class="line">    # for more information.</span><br><span class="line">    include /etc/nginx/conf.d/*.conf;</span><br><span class="line"></span><br><span class="line">    server &#123;</span><br><span class="line">        listen       80 default_server;</span><br><span class="line">        listen       [::]:80 default_server;</span><br><span class="line">        server_name  _;</span><br><span class="line">        root         /usr/share/nginx/html;</span><br><span class="line"></span><br><span class="line">        # Load configuration files for the default server block.</span><br><span class="line">        include /etc/nginx/default.d/*.conf;</span><br><span class="line"></span><br><span class="line">        location / &#123;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        error_page 404 /404.html;</span><br><span class="line">            location = /40x.html &#123;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        error_page 500 502 503 504 /50x.html;</span><br><span class="line">            location = /50x.html &#123;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> Settings for a TLS enabled server.</span><br><span class="line"><span class="meta">#</span></span><br><span class="line"><span class="meta">#</span>    server &#123;</span><br><span class="line"><span class="meta">#</span>        listen       443 ssl http2 default_server;</span><br><span class="line"><span class="meta">#</span>        listen       [::]:443 ssl http2 default_server;</span><br><span class="line"><span class="meta">#</span>        server_name  _;</span><br><span class="line"><span class="meta">#</span>        root         /usr/share/nginx/html;</span><br><span class="line"><span class="meta">#</span></span><br><span class="line"><span class="meta">#</span>        ssl_certificate "/etc/pki/nginx/server.crt";</span><br><span class="line"><span class="meta">#</span>        ssl_certificate_key "/etc/pki/nginx/private/server.key";</span><br><span class="line"><span class="meta">#</span>        ssl_session_cache shared:SSL:1m;</span><br><span class="line"><span class="meta">#</span>        ssl_session_timeout  10m;</span><br><span class="line"><span class="meta">#</span>        ssl_ciphers HIGH:!aNULL:!MD5;</span><br><span class="line"><span class="meta">#</span>        ssl_prefer_server_ciphers on;</span><br><span class="line"><span class="meta">#</span></span><br><span class="line"><span class="meta">#</span>        # Load configuration files for the default server block.</span><br><span class="line"><span class="meta">#</span>        include /etc/nginx/default.d/*.conf;</span><br><span class="line"><span class="meta">#</span></span><br><span class="line"><span class="meta">#</span>        location / &#123;</span><br><span class="line"><span class="meta">#</span>        &#125;</span><br><span class="line"><span class="meta">#</span></span><br><span class="line"><span class="meta">#</span>        error_page 404 /404.html;</span><br><span class="line"><span class="meta">#</span>            location = /40x.html &#123;</span><br><span class="line"><span class="meta">#</span>        &#125;</span><br><span class="line"><span class="meta">#</span></span><br><span class="line"><span class="meta">#</span>        error_page 500 502 503 504 /50x.html;</span><br><span class="line"><span class="meta">#</span>            location = /50x.html &#123;</span><br><span class="line"><span class="meta">#</span>        &#125;</span><br><span class="line"><span class="meta">#</span>    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>让我们增加一个server配置, 页面在<code>~/nginx-demo/index.html</code>:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">    listen       8001;</span><br><span class="line">    listen       [::]:8001;</span><br><span class="line">    server_name  _;</span><br><span class="line">    root         ~/nginx-demo;</span><br><span class="line"></span><br><span class="line">    # Load configuration files for the default server block.</span><br><span class="line">    include /etc/nginx/default.d/*.conf;</span><br><span class="line"></span><br><span class="line">    location / &#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    error_page 404 /404.html;</span><br><span class="line">        location = /40x.html &#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    error_page 500 502 503 504 /50x.html;</span><br><span class="line">        location = /50x.html &#123;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>让我们打开浏览器访问页面看看.</p>
+<p>发现页面403，让我们看看怎么了？ 发现是我们所在的文件夹没有读取权限，通过运行<code>chmod 755 /root</code>即可(<code>/root</code>就是<code>~</code>)。</p>
+<p>这样我们就可以访问页面了。🍻</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> nginx #运行配置</span><br><span class="line"><span class="meta">$</span> nginx -s reload # 重新加载配置文件</span><br><span class="line"><span class="meta">$</span> nginx -s reopen # 重启</span><br><span class="line"><span class="meta">$</span> nginx -s stop # 关闭</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://maczyt.github.io/2019/07/07/Cetos7安装nginx三两事/" data-id="cjxsn8u7b0003q8vvykfmmlo4" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/环境配置/">环境配置</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+ 
+
+
+  
     <article id="post-阿里云Cetos安装Mysql" class="article article-type-post" itemscope="" itemprop="blogPost">
   <div class="article-meta">
     <a href="/2019/07/05/阿里云Cetos安装Mysql/" class="article-date">
@@ -107,7 +165,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://maczyt.github.io/2019/07/05/阿里云Cetos安装Mysql/" data-id="cjxqzxptu000mh8vvnramtkw0" class="article-share-link">分享</a>
+      <a data-url="https://maczyt.github.io/2019/07/05/阿里云Cetos安装Mysql/" data-id="cjxsn8u92000fq8vv48e6gkca" class="article-share-link">分享</a>
       
       
       
@@ -155,7 +213,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://maczyt.github.io/2019/03/21/转-学习正则表达式/" data-id="cjxqzxpvl0013h8vv2e3rw14y" class="article-share-link">分享</a>
+      <a data-url="https://maczyt.github.io/2019/03/21/转-学习正则表达式/" data-id="cjxsn8uf9001aq8vvllid9p20" class="article-share-link">分享</a>
       
       
       
@@ -202,7 +260,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://maczyt.github.io/2019/03/20/Tip-为什么我们推荐style放在head中，而script放在body尾/" data-id="cjxqzxptm000jh8vvizih5zwx" class="article-share-link">分享</a>
+      <a data-url="https://maczyt.github.io/2019/03/20/Tip-为什么我们推荐style放在head中，而script放在body尾/" data-id="cjxsn8u600000q8vvnhj1pte5" class="article-share-link">分享</a>
       
       
       
@@ -251,7 +309,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://maczyt.github.io/2019/03/10/如何动手创建一个简单的MVVM框架/" data-id="cjxqzxpt60008h8vvoqeml9ea" class="article-share-link">分享</a>
+      <a data-url="https://maczyt.github.io/2019/03/10/如何动手创建一个简单的MVVM框架/" data-id="cjxsn8u7r0005q8vvnqp0cxm9" class="article-share-link">分享</a>
       
       
       
@@ -300,7 +358,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://maczyt.github.io/2019/03/02/如何解析template成VNODE/" data-id="cjxqzxpt8000ah8vvrqv6oloa" class="article-share-link">分享</a>
+      <a data-url="https://maczyt.github.io/2019/03/02/如何解析template成VNODE/" data-id="cjxsn8u7z0008q8vvrrdmxw8g" class="article-share-link">分享</a>
       
       
       
@@ -347,7 +405,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://maczyt.github.io/2019/01/23/浅谈JS模块化/" data-id="cjxqzxptb000ch8vv1vxctgzl" class="article-share-link">分享</a>
+      <a data-url="https://maczyt.github.io/2019/01/23/浅谈JS模块化/" data-id="cjxsn8u880009q8vv6feqre99" class="article-share-link">分享</a>
       
       
       
@@ -399,7 +457,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://maczyt.github.io/2019/01/20/深入浅出Promise/" data-id="cjxqzxpth000eh8vv7pgxl4g8" class="article-share-link">分享</a>
+      <a data-url="https://maczyt.github.io/2019/01/20/深入浅出Promise/" data-id="cjxsn8u8n000dq8vv129gj3pg" class="article-share-link">分享</a>
       
       
       
@@ -444,7 +502,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://maczyt.github.io/2019/01/16/JS基础知识梳理/" data-id="cjxqzxpsb0000h8vvvwgqa9ue" class="article-share-link">分享</a>
+      <a data-url="https://maczyt.github.io/2019/01/16/JS基础知识梳理/" data-id="cjxsn8u8h000cq8vvvuzd3itc" class="article-share-link">分享</a>
       
       
       
@@ -489,56 +547,11 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://maczyt.github.io/2019/01/14/从microTask、macroTask到async-await简单了解/" data-id="cjxqzxpt30007h8vvw84lhlg1" class="article-share-link">分享</a>
+      <a data-url="https://maczyt.github.io/2019/01/14/从microTask、macroTask到async-await简单了解/" data-id="cjxsn8u6m0001q8vv6ptp79o8" class="article-share-link">分享</a>
       
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JS/">JS</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/基础知识/">基础知识</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/异步/">异步</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
- 
-
-
-  
-    <article id="post-手工实现vue-router" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2018/12/30/手工实现vue-router/" class="article-date">
-  <time datetime="2018-12-30T07:02:34.000Z" itemprop="datePublished">2018-12-30</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/12/30/手工实现vue-router/">手工实现vue-router</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>今天是元旦放假的第一天，窝在家里，倍感无聊，所以写下本文。一是想巩固对<a href="https://router.vuejs.org/" target="_blank" rel="noopener"><code>vue-router</code></a>的掌握，二是当作记录，方便你我他。</p>
-        
-          <p class="article-more-link">
-            <a href="/2018/12/30/手工实现vue-router/#more">继续阅读全文 »</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://maczyt.github.io/2018/12/30/手工实现vue-router/" data-id="cjxqzxpuj000xh8vvrkpz4fvm" class="article-share-link">分享</a>
-      
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JS/">JS</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Router/">Router</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Vue-js/">Vue.js</a></li></ul>
 
     </footer>
   </div>
@@ -585,7 +598,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title tagcloud">标签云</h3>
     <div class="widget tagcloud">
-      <a href="/tags/JS/" style="font-size: 25px;">JS</a> <a href="/tags/Router/" style="font-size: 14px;">Router</a> <a href="/tags/TIP/" style="font-size: 14px;">TIP</a> <a href="/tags/Vue-js/" style="font-size: 14px;">Vue.js</a> <a href="/tags/基础/" style="font-size: 21.33px;">基础</a> <a href="/tags/基础知识/" style="font-size: 14px;">基础知识</a> <a href="/tags/学习/" style="font-size: 14px;">学习</a> <a href="/tags/异步/" style="font-size: 17.67px;">异步</a> <a href="/tags/环境配置/" style="font-size: 14px;">环境配置</a> <a href="/tags/转载/" style="font-size: 14px;">转载</a> <a href="/tags/面试/" style="font-size: 14px;">面试</a>
+      <a href="/tags/JS/" style="font-size: 25px;">JS</a> <a href="/tags/Router/" style="font-size: 14px;">Router</a> <a href="/tags/TIP/" style="font-size: 14px;">TIP</a> <a href="/tags/Vue-js/" style="font-size: 14px;">Vue.js</a> <a href="/tags/基础/" style="font-size: 21.33px;">基础</a> <a href="/tags/基础知识/" style="font-size: 14px;">基础知识</a> <a href="/tags/学习/" style="font-size: 14px;">学习</a> <a href="/tags/异步/" style="font-size: 17.67px;">异步</a> <a href="/tags/环境配置/" style="font-size: 17.67px;">环境配置</a> <a href="/tags/转载/" style="font-size: 14px;">转载</a> <a href="/tags/面试/" style="font-size: 14px;">面试</a>
     </div>
   </div>
 
@@ -595,6 +608,10 @@
     <h3 class="widget-title recent-posts">最新文章</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2019/07/07/Cetos7安装nginx三两事/">Cetos7安装nginx三两事</a>
+          </li>
         
           <li>
             <a href="/2019/07/05/阿里云Cetos安装Mysql/">阿里云Cetos安装Mysql</a>
@@ -612,10 +629,6 @@
             <a href="/2019/03/10/如何动手创建一个简单的MVVM框架/">如何动手创建一个简单的MVVM框架</a>
           </li>
         
-          <li>
-            <a href="/2019/03/02/如何解析template成VNODE/">如何解析template成VNODE</a>
-          </li>
-        
       </ul>
     </div>
   </div>
@@ -625,7 +638,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title archive">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">July 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a><span class="archive-list-count">2</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">July 2019</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a><span class="archive-list-count">2</span></li></ul>
     </div>
   </div>
 

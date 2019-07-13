@@ -5,18 +5,18 @@
   
   <title>Cetos7安装nginx三两事 | 周宇涛的网络日志</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="Nginx安装阿里云cetos7已经默认添加了nginx的yum源，可以通过yum search nginx确认。 如果没有，则可以通过运行rpm -Uvh http://nginx.org/packages/centos/7/noarch/RPMS/nginx-release-centos-7-0.el7.ngx.noarch.rpm进行添加。 命令123$ systemctl start ng">
+  <meta name="description" content="Nginx安装阿里云cetos7已经默认添加了nginx的yum源，可以通过yum search nginx确认。 如果没有，则可以通过运行rpm -Uvh http://nginx.org/packages/centos/7/noarch/RPMS/nginx-release-centos-7-0.el7.ngx.noarch.rpm进行添加。">
 <meta name="keywords" content="环境配置">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Cetos7安装nginx三两事">
 <meta property="og:url" content="https://maczyt.github.io/2019/07/07/Cetos7安装nginx三两事/index.html">
 <meta property="og:site_name" content="周宇涛的网络日志">
-<meta property="og:description" content="Nginx安装阿里云cetos7已经默认添加了nginx的yum源，可以通过yum search nginx确认。 如果没有，则可以通过运行rpm -Uvh http://nginx.org/packages/centos/7/noarch/RPMS/nginx-release-centos-7-0.el7.ngx.noarch.rpm进行添加。 命令123$ systemctl start ng">
+<meta property="og:description" content="Nginx安装阿里云cetos7已经默认添加了nginx的yum源，可以通过yum search nginx确认。 如果没有，则可以通过运行rpm -Uvh http://nginx.org/packages/centos/7/noarch/RPMS/nginx-release-centos-7-0.el7.ngx.noarch.rpm进行添加。">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-07-07T07:37:03.774Z">
+<meta property="og:updated_time" content="2019-07-13T10:26:27.487Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Cetos7安装nginx三两事">
-<meta name="twitter:description" content="Nginx安装阿里云cetos7已经默认添加了nginx的yum源，可以通过yum search nginx确认。 如果没有，则可以通过运行rpm -Uvh http://nginx.org/packages/centos/7/noarch/RPMS/nginx-release-centos-7-0.el7.ngx.noarch.rpm进行添加。 命令123$ systemctl start ng">
+<meta name="twitter:description" content="Nginx安装阿里云cetos7已经默认添加了nginx的yum源，可以通过yum search nginx确认。 如果没有，则可以通过运行rpm -Uvh http://nginx.org/packages/centos/7/noarch/RPMS/nginx-release-centos-7-0.el7.ngx.noarch.rpm进行添加。">
   
     <link rel="alternate" href="/atom.xml" title="周宇涛的网络日志" type="application/atom+xml">
   
@@ -95,6 +95,7 @@
         
         <h2 id="Nginx安装"><a href="#Nginx安装" class="headerlink" title="Nginx安装"></a>Nginx安装</h2><p>阿里云cetos7已经默认添加了nginx的yum源，可以通过<code>yum search nginx</code>确认。</p>
 <p>如果没有，则可以通过运行<code>rpm -Uvh http://nginx.org/packages/centos/7/noarch/RPMS/nginx-release-centos-7-0.el7.ngx.noarch.rpm</code>进行添加。</p>
+<a id="more"></a>
 <h2 id="命令"><a href="#命令" class="headerlink" title="命令"></a>命令</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> systemctl start nginx.service # 启动nginx服务</span><br><span class="line"><span class="meta">$</span> systemctl stop nginx.service # 关闭</span><br><span class="line"><span class="meta">$</span> systemctl enable nginx.service # 开机</span><br></pre></td></tr></table></figure>
 <h2 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h2><blockquote>
 <p>由于我开启了8001的安全组规则，所以我使用8001端口来演示展示一个Hello Nginx页面</p>
@@ -113,7 +114,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://maczyt.github.io/2019/07/07/Cetos7安装nginx三两事/" data-id="cjxsn8u7b0003q8vvykfmmlo4" class="article-share-link">分享</a>
+      <a data-url="https://maczyt.github.io/2019/07/07/Cetos7安装nginx三两事/" data-id="cjy1dzmyn0000ocvvyjkql0vy" class="article-share-link">分享</a>
       
       
       
@@ -166,6 +167,15 @@
 
     
 <nav id="article-nav">
+  
+    <a href="/2019/07/13/使用网格grid布局实现bootstrap的栅格系统/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">上一篇</strong>
+      <div class="article-nav-title">
+        
+          使用网格grid布局实现bootstrap的栅格系统
+        
+      </div>
+    </a>
   
   
     <a href="/2019/07/05/阿里云Cetos安装Mysql/" id="article-nav-older" class="article-nav-link-wrap">

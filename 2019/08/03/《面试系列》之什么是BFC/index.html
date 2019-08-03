@@ -3,14 +3,14 @@
 <head><meta name="generator" content="Hexo 3.8.0">
   <meta charset="utf-8">
   
-  <title>《面试系列》之什么是BFC? | 周宇涛的网络日志</title>
+  <title>《面试系列》之什么是BFC? | maczyt的网络日志</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="面试时常常会被问到有关BFC的问题，虽然网上有关讲解BFC的文章很多，基本大篇理论知识，虽收获不少，但面对面试时，却不知如何回答，不能条理清晰、简单明了的回答出面试官想考察的内容，容易导致回答着把自己都给弄晕了(尤其在紧张的情绪下，非常容易导致越说越“乱”，从而造成面试官觉得你理解不到位的认知😭)。所以特此记录下来，一为了加深对BFC的理解，二则为了面试能更好的回答。 相关面试题 简述你对BFC">
 <meta name="keywords" content="基础,面试,CSS">
 <meta property="og:type" content="article">
 <meta property="og:title" content="《面试系列》之什么是BFC?">
 <meta property="og:url" content="https://maczyt.github.io/2019/08/03/《面试系列》之什么是BFC/index.html">
-<meta property="og:site_name" content="周宇涛的网络日志">
+<meta property="og:site_name" content="maczyt的网络日志">
 <meta property="og:description" content="面试时常常会被问到有关BFC的问题，虽然网上有关讲解BFC的文章很多，基本大篇理论知识，虽收获不少，但面对面试时，却不知如何回答，不能条理清晰、简单明了的回答出面试官想考察的内容，容易导致回答着把自己都给弄晕了(尤其在紧张的情绪下，非常容易导致越说越“乱”，从而造成面试官觉得你理解不到位的认知😭)。所以特此记录下来，一为了加深对BFC的理解，二则为了面试能更好的回答。 相关面试题 简述你对BFC">
 <meta property="og:locale" content="default">
 <meta property="og:image" content="https://maczyt.github.io/2019/08/03/《面试系列》之什么是BFC/1.png">
@@ -22,13 +22,13 @@
 <meta property="og:image" content="https://maczyt.github.io/2019/08/03/《面试系列》之什么是BFC/7.png">
 <meta property="og:image" content="https://maczyt.github.io/2019/08/03/《面试系列》之什么是BFC/8.png">
 <meta property="og:image" content="https://maczyt.github.io/2019/08/03/《面试系列》之什么是BFC/9.png">
-<meta property="og:updated_time" content="2019-08-03T16:53:47.813Z">
+<meta property="og:updated_time" content="2019-08-03T16:57:13.786Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="《面试系列》之什么是BFC?">
 <meta name="twitter:description" content="面试时常常会被问到有关BFC的问题，虽然网上有关讲解BFC的文章很多，基本大篇理论知识，虽收获不少，但面对面试时，却不知如何回答，不能条理清晰、简单明了的回答出面试官想考察的内容，容易导致回答着把自己都给弄晕了(尤其在紧张的情绪下，非常容易导致越说越“乱”，从而造成面试官觉得你理解不到位的认知😭)。所以特此记录下来，一为了加深对BFC的理解，二则为了面试能更好的回答。 相关面试题 简述你对BFC">
 <meta name="twitter:image" content="https://maczyt.github.io/2019/08/03/《面试系列》之什么是BFC/1.png">
   
-    <link rel="alternate" href="/atom.xml" title="周宇涛的网络日志" type="application/atom+xml">
+    <link rel="alternate" href="/atom.xml" title="maczyt的网络日志" type="application/atom+xml">
   
   
     <link rel="icon" href="/favicon.ico">
@@ -72,7 +72,7 @@
     </div>
     <div id="header-title" class="inner">
       <h1 id="logo-wrap">
-        <a href="/" id="logo">周宇涛的网络日志</a>
+        <a href="/" id="logo">maczyt的网络日志</a>
       </h1>
       
     </div>
@@ -150,7 +150,7 @@
 <p><img src="3.png" alt="触发child1BFC"></p>
 <p>发现还是发生margin合并，按照规则，虽然触发了child1的BFC，但是两个元素还是处于同一个BFC。</p>
 <p>经过以上试验，我得出了未完全经官方认知的结论:</p>
-<p><strong>BFC元素影响的是内部元素</strong></p>
+<p><strong>BFC影响的是内部元素</strong></p>
 <ol>
 <li>比如父子中，设置child为BFC，因为影响的是内部，所以child还是和par处于同一个BFC中</li>
 <li>兄弟中，设置child1为BFC，影响的是child1的子元素，但child1和child2还是处于同一个BFC</li>
@@ -182,7 +182,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://maczyt.github.io/2019/08/03/《面试系列》之什么是BFC/" data-id="cjyvnhgd00004sovv0w5njfa8" class="article-share-link">分享</a>
+      <a data-url="https://maczyt.github.io/2019/08/03/《面试系列》之什么是BFC/" data-id="cjyvs6bh10005z0vvtdxqzpye" class="article-share-link">分享</a>
       
       
       

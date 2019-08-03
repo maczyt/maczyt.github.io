@@ -3,14 +3,14 @@
 <head><meta name="generator" content="Hexo 3.8.0">
   <meta charset="utf-8">
   
-  <title>如何解析template成VNODE | 周宇涛的网络日志</title>
+  <title>如何解析template成VNODE | maczyt的网络日志</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="最近被问到，Vue2.0 中 template 是如何解析成 VNode先变成 DOM 节点再通过深度优先遍历转成 VNode，又瞎答说使用正则来解析，但是又给不出具体的思路。  恰逢周末，特地搜了一波，运气还不错，搜到了preact作者写的htm库，发现完全就是我想要的实现，而且简单，代码量少，不必直接阅读 Vue 或 React 源码。 代码量虽少，但对于我来说，还是不太好理解，所以打算记录">
 <meta name="keywords" content="JS">
 <meta property="og:type" content="article">
 <meta property="og:title" content="如何解析template成VNODE">
 <meta property="og:url" content="https://maczyt.github.io/2019/03/02/如何解析template成VNODE/index.html">
-<meta property="og:site_name" content="周宇涛的网络日志">
+<meta property="og:site_name" content="maczyt的网络日志">
 <meta property="og:description" content="最近被问到，Vue2.0 中 template 是如何解析成 VNode先变成 DOM 节点再通过深度优先遍历转成 VNode，又瞎答说使用正则来解析，但是又给不出具体的思路。  恰逢周末，特地搜了一波，运气还不错，搜到了preact作者写的htm库，发现完全就是我想要的实现，而且简单，代码量少，不必直接阅读 Vue 或 React 源码。 代码量虽少，但对于我来说，还是不太好理解，所以打算记录">
 <meta property="og:locale" content="default">
 <meta property="og:updated_time" content="2019-03-05T13:59:58.829Z">
@@ -18,7 +18,7 @@
 <meta name="twitter:title" content="如何解析template成VNODE">
 <meta name="twitter:description" content="最近被问到，Vue2.0 中 template 是如何解析成 VNode先变成 DOM 节点再通过深度优先遍历转成 VNode，又瞎答说使用正则来解析，但是又给不出具体的思路。  恰逢周末，特地搜了一波，运气还不错，搜到了preact作者写的htm库，发现完全就是我想要的实现，而且简单，代码量少，不必直接阅读 Vue 或 React 源码。 代码量虽少，但对于我来说，还是不太好理解，所以打算记录">
   
-    <link rel="alternate" href="/atom.xml" title="周宇涛的网络日志" type="application/atom+xml">
+    <link rel="alternate" href="/atom.xml" title="maczyt的网络日志" type="application/atom+xml">
   
   
     <link rel="icon" href="/favicon.ico">
@@ -62,7 +62,7 @@
     </div>
     <div id="header-title" class="inner">
       <h1 id="logo-wrap">
-        <a href="/" id="logo">周宇涛的网络日志</a>
+        <a href="/" id="logo">maczyt的网络日志</a>
       </h1>
       
     </div>
@@ -128,7 +128,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://maczyt.github.io/2019/03/02/如何解析template成VNODE/" data-id="cjyvnhgec000fsovvjrx4c3xr" class="article-share-link">分享</a>
+      <a data-url="https://maczyt.github.io/2019/03/02/如何解析template成VNODE/" data-id="cjyvs6bhv000dz0vvrcmc9kh0" class="article-share-link">分享</a>
       
       
       

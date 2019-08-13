@@ -5,20 +5,20 @@
   
   <title>《面试系列》之什么是event loop | maczyt的网络日志</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="event loop指的是一种运行机制，规定了JS引擎是如何运行代码的。结合我为数不多的面试经历来看，基本算是必中的考点。如果要问到event loop,大致有如下流程（下面算是个人的经验总结，难免有遗漏之处，还请指正😊，顺序可能会有所打乱）：  为什么会有Event loop？（Why)由于JS是单线程执行的，所以任务(代码)的执行需要进行排队。任务分为两种：同步和异步，针对异步任务，首先会被">
+  <meta name="description" content="event loop指的是一种运行机制，规定了JS引擎是如何运行代码的。结合我为数不多的面试经历来看，基本算是必中的考点。如果要问到event loop,大致有如下流程（下面算是个人的经验总结，难免有遗漏之处，还请指正😊，顺序可能会有所打乱）：">
 <meta name="keywords" content="JS,基础,面试">
 <meta property="og:type" content="article">
 <meta property="og:title" content="《面试系列》之什么是event loop">
 <meta property="og:url" content="https://maczyt.github.io/2019/08/13/《面试系列》之什么是event-loop/index.html">
 <meta property="og:site_name" content="maczyt的网络日志">
-<meta property="og:description" content="event loop指的是一种运行机制，规定了JS引擎是如何运行代码的。结合我为数不多的面试经历来看，基本算是必中的考点。如果要问到event loop,大致有如下流程（下面算是个人的经验总结，难免有遗漏之处，还请指正😊，顺序可能会有所打乱）：  为什么会有Event loop？（Why)由于JS是单线程执行的，所以任务(代码)的执行需要进行排队。任务分为两种：同步和异步，针对异步任务，首先会被">
+<meta property="og:description" content="event loop指的是一种运行机制，规定了JS引擎是如何运行代码的。结合我为数不多的面试经历来看，基本算是必中的考点。如果要问到event loop,大致有如下流程（下面算是个人的经验总结，难免有遗漏之处，还请指正😊，顺序可能会有所打乱）：">
 <meta property="og:locale" content="default">
 <meta property="og:image" content="https://maczyt.github.io/2019/08/13/《面试系列》之什么是event-loop/1.png">
 <meta property="og:image" content="https://maczyt.github.io/2019/08/13/《面试系列》之什么是event-loop/2.png">
-<meta property="og:updated_time" content="2019-08-13T15:34:40.300Z">
+<meta property="og:updated_time" content="2019-08-13T15:37:35.335Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="《面试系列》之什么是event loop">
-<meta name="twitter:description" content="event loop指的是一种运行机制，规定了JS引擎是如何运行代码的。结合我为数不多的面试经历来看，基本算是必中的考点。如果要问到event loop,大致有如下流程（下面算是个人的经验总结，难免有遗漏之处，还请指正😊，顺序可能会有所打乱）：  为什么会有Event loop？（Why)由于JS是单线程执行的，所以任务(代码)的执行需要进行排队。任务分为两种：同步和异步，针对异步任务，首先会被">
+<meta name="twitter:description" content="event loop指的是一种运行机制，规定了JS引擎是如何运行代码的。结合我为数不多的面试经历来看，基本算是必中的考点。如果要问到event loop,大致有如下流程（下面算是个人的经验总结，难免有遗漏之处，还请指正😊，顺序可能会有所打乱）：">
 <meta name="twitter:image" content="https://maczyt.github.io/2019/08/13/《面试系列》之什么是event-loop/1.png">
   
     <link rel="alternate" href="/atom.xml" title="maczyt的网络日志" type="application/atom+xml">
@@ -97,6 +97,7 @@
         <!-- Table of Contents -->
         
         <p><code>event loop</code>指的是一种运行机制，规定了JS引擎是如何运行代码的。结合我为数不多的面试经历来看，基本算是必中的考点。如果要问到<code>event loop</code>,大致有如下流程（下面算是个人的经验总结，难免有遗漏之处，还请指正😊，顺序可能会有所打乱）：</p>
+<a id="more"></a>
 <p><img src="1.png" alt="题目流程"></p>
 <h2 id="为什么会有Event-loop？（Why"><a href="#为什么会有Event-loop？（Why" class="headerlink" title="为什么会有Event loop？（Why)"></a>为什么会有Event loop？（Why)</h2><p>由于JS是单线程执行的，所以任务(代码)的执行需要进行排队。任务分为两种：同步和异步，针对异步任务，首先会被推到任务队列中，然后根据event loop机制进行执行。</p>
 <h2 id="event-loop"><a href="#event-loop" class="headerlink" title="event loop"></a>event loop</h2><p>对于此需要了解到两个很重要的知识点：<strong>宏任务</strong> 和 <strong>微任务</strong>。 简单的理解为两个任务队列。</p>
@@ -128,7 +129,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://maczyt.github.io/2019/08/13/《面试系列》之什么是event-loop/" data-id="cjyzz3c1u000br4vvzd84oxf0" class="article-share-link">分享</a>
+      <a data-url="https://maczyt.github.io/2019/08/13/《面试系列》之什么是event-loop/" data-id="cjz9zpazc0008cgvvh1sda5p3" class="article-share-link">分享</a>
       
       
       

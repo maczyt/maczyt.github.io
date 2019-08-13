@@ -66,6 +66,76 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-《面试系列》之什么是event-loop" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/08/13/《面试系列》之什么是event-loop/" class="article-date">
+  <time datetime="2019-08-13T15:30:32.000Z" itemprop="datePublished">2019-08-13</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/08/13/《面试系列》之什么是event-loop/">《面试系列》之什么是event loop</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!-- Table of Contents -->
+        
+        <p><code>event loop</code>指的是一种运行机制，规定了JS引擎是如何运行代码的。结合我为数不多的面试经历来看，基本算是必中的考点。如果要问到<code>event loop</code>,大致有如下流程（下面算是个人的经验总结，难免有遗漏之处，还请指正😊，顺序可能会有所打乱）：</p>
+<p><img src="1.png" alt="题目流程"></p>
+<h2 id="为什么会有Event-loop？（Why"><a href="#为什么会有Event-loop？（Why" class="headerlink" title="为什么会有Event loop？（Why)"></a>为什么会有Event loop？（Why)</h2><p>由于JS是单线程执行的，所以任务(代码)的执行需要进行排队。任务分为两种：同步和异步，针对异步任务，首先会被推到任务队列中，然后根据event loop机制进行执行。</p>
+<h2 id="event-loop"><a href="#event-loop" class="headerlink" title="event loop"></a>event loop</h2><p>对于此需要了解到两个很重要的知识点：<strong>宏任务</strong> 和 <strong>微任务</strong>。 简单的理解为两个任务队列。</p>
+<h3 id="宏任务"><a href="#宏任务" class="headerlink" title="宏任务"></a>宏任务</h3><p>当执行以下方法函数，将把其<code>callback</code>推到宏任务队列中</p>
+<ol>
+<li><code>setTimeout</code>、<code>setInterval</code>和<code>setImmediate</code></li>
+<li><code>I/O操作</code>、<code>UI渲染</code>、<code>script脚本执行</code></li>
+<li><code>MessageChannel</code>(Vue的nexttick有使用)</li>
+</ol>
+<h3 id="微任务"><a href="#微任务" class="headerlink" title="微任务"></a>微任务</h3><p>同理，不过是推到微任务队列</p>
+<ol>
+<li><code>Promise</code></li>
+<li><code>MutationObserver</code></li>
+<li><code>process.nextTick</code> (Node)</li>
+</ol>
+<h3 id="举例"><a href="#举例" class="headerlink" title="举例"></a>举例</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">setTimeout(<span class="function"><span class="keyword">function</span> <span class="title">callback1</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'a'</span>);</span><br><span class="line">&#125;, <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> p = <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function"><span class="keyword">function</span> <span class="title">callback2</span>(<span class="params">resolve</span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'b'</span>);</span><br><span class="line">  resolve();</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">p.then(<span class="function"><span class="keyword">function</span> <span class="title">callback3</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'c'</span>);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'d'</span>);</span><br></pre></td></tr></table></figure>
+<p>首先这块代码可以理解为一个<code>script</code>脚本，所以代码执行其实是从一个宏任务开始。<br>👇<br>当我执行<code>setTimeout</code>代码，这个时候会通过线程在0ms(不过浏览器最小会计算成4ms)后把<code>callback1</code>推到宏任务队列中。<br>👇<br>这个时候继续执行，实例Promise对象是同步的，所以这里会立即执行<code>callback2</code>，输出’b’,然后修改该Promise对象的状态为<code>resolved</code>。<br>👇<br>因为当前对象p是<code>resolved</code>状态所以会执行对应的then方法，且将<code>callback3</code>推到微任务队列中。<br>👇<br>代码继续执行，输出’d’,主线程代码执行完毕。与微任务进行通信，并取出整队队列，依次执行。<br>👇<br>因为微任务队列只有<code>callback3</code>，执行输出’c’。这个时候一次eventloop循环结束，开始下一个循环。<br>👇<br>取出宏任务队列第一个任务，也就是上面推进的<code>callback1</code>，执行输出’a’.</p>
+<p>所以最终输出’b’ -&gt; ‘d’ -&gt; ‘c’ -&gt; ‘a’.不知你答对了吗?</p>
+<h2 id="Vue的nextTick机制"><a href="#Vue的nextTick机制" class="headerlink" title="Vue的nextTick机制"></a>Vue的nextTick机制</h2><p>在一开始学习vue的时候，经常会遇到修改数据后，获取的DOM并不是最新的，然后查看资料说需要通过异步来处理，这里其实就是运用了event loop的机制。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">template</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">p</span>&gt;</span>&#123;&#123;count&#125;&#125;<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">template</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="javascript"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span></span><br><span class="line"><span class="undefined">  data() &#123;</span></span><br><span class="line"><span class="javascript">    <span class="keyword">return</span> &#123;</span></span><br><span class="line"><span class="undefined">      count: 0,</span></span><br><span class="line"><span class="undefined">    &#125;</span></span><br><span class="line"><span class="undefined">  &#125;,</span></span><br><span class="line"><span class="undefined">  mounted() &#123;</span></span><br><span class="line"><span class="javascript">    <span class="keyword">this</span>.count ++;</span></span><br><span class="line"><span class="javascript">    <span class="keyword">this</span>.count ++;</span></span><br><span class="line"><span class="javascript">    <span class="comment">// console.log(this.$el.textContent === ?) 这里我们发现输出为0，也就是初始值</span></span></span><br><span class="line"><span class="undefined">  &#125;</span></span><br><span class="line"><span class="undefined">&#125;</span></span><br><span class="line"><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>简单的解释，执行<code>mounted</code>方法时，当第一次<code>this.count ++</code>时，首先会对count数据进行自增且Vue会将count对应Watcher的update方法推到微任务中；第二次<code>this.count ++</code>时，根据count对应Watcher对象的id来判断是否已经处理而选择跳过，只对count进行自增。然后在执行微任务中的update方法时对对应的模板进行更新操作。</p>
+<p>由于微任务队列的执行顺序，所以我们只需引入一个微任务，该任务即可获取最新数据的DOM。或者通过下一次event loop循环的宏任务也可。</p>
+<hr>
+<p>看过掘金小册《前端性能优化原理与实践》中有张介绍event loop的图。</p>
+<p><img src="2.png" alt="循环过程"></p>
+<p>关于执行完微任务后再执行渲染操作，这个让我费解了许久，因为根据我们上面的解释，也就是在update方法后面的微任务即可获取到最新数据。</p>
+<p>后面，解释是该渲染操作是把DOM进行paint，之前的update方法已经对DOM进行了修改处理。两者不是同一个概念。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://maczyt.github.io/2019/08/13/《面试系列》之什么是event-loop/" data-id="cjyzz3c1u000br4vvzd84oxf0" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JS/">JS</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/基础/">基础</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/面试/">面试</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+ 
+
+
+  
     <article id="post-《面试系列》之什么是BFC" class="article article-type-post" itemscope="" itemprop="blogPost">
   <div class="article-meta">
     <a href="/2019/08/03/《面试系列》之什么是BFC/" class="article-date">
@@ -104,7 +174,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://maczyt.github.io/2019/08/03/《面试系列》之什么是BFC/" data-id="cjyvs6bh10005z0vvtdxqzpye" class="article-share-link">分享</a>
+      <a data-url="https://maczyt.github.io/2019/08/03/《面试系列》之什么是BFC/" data-id="cjyzz3c1a0005r4vvh8lgkah4" class="article-share-link">分享</a>
       
       
       
@@ -149,7 +219,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://maczyt.github.io/2019/07/13/使用网格grid布局实现bootstrap的栅格系统/" data-id="cjyvs6bhe0009z0vvaymd06uc" class="article-share-link">分享</a>
+      <a data-url="https://maczyt.github.io/2019/07/13/使用网格grid布局实现bootstrap的栅格系统/" data-id="cjyzz3c1m0008r4vvhexexl17" class="article-share-link">分享</a>
       
       
       
@@ -195,7 +265,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://maczyt.github.io/2019/07/07/Cetos7安装nginx三两事/" data-id="cjyvs6bfs0000z0vvv5vagsc6" class="article-share-link">分享</a>
+      <a data-url="https://maczyt.github.io/2019/07/07/Cetos7安装nginx三两事/" data-id="cjyzz3c150003r4vvs6mk9o2z" class="article-share-link">分享</a>
       
       
       
@@ -250,7 +320,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://maczyt.github.io/2019/07/05/阿里云Cetos安装Mysql/" data-id="cjyvs6bil000lz0vvb4850r0r" class="article-share-link">分享</a>
+      <a data-url="https://maczyt.github.io/2019/07/05/阿里云Cetos安装Mysql/" data-id="cjyzz3c29000kr4vvbod136ow" class="article-share-link">分享</a>
       
       
       
@@ -298,7 +368,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://maczyt.github.io/2019/03/21/转-学习正则表达式/" data-id="cjyvs6bmi001kz0vvw2exq4q3" class="article-share-link">分享</a>
+      <a data-url="https://maczyt.github.io/2019/03/21/转-学习正则表达式/" data-id="cjyzz3c4s001nr4vvgrs6m1j0" class="article-share-link">分享</a>
       
       
       
@@ -345,7 +415,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://maczyt.github.io/2019/03/20/Tip-为什么我们推荐style放在head中，而script放在body尾/" data-id="cjyvs6bgq0003z0vvjt9cqp8b" class="article-share-link">分享</a>
+      <a data-url="https://maczyt.github.io/2019/03/20/Tip-为什么我们推荐style放在head中，而script放在body尾/" data-id="cjyzz3c0v0001r4vvafj4nxrw" class="article-share-link">分享</a>
       
       
       
@@ -394,7 +464,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://maczyt.github.io/2019/03/10/如何动手创建一个简单的MVVM框架/" data-id="cjyvs6bhq000bz0vv0prcx6uj" class="article-share-link">分享</a>
+      <a data-url="https://maczyt.github.io/2019/03/10/如何动手创建一个简单的MVVM框架/" data-id="cjyzz3c1y000dr4vvijphb1dd" class="article-share-link">分享</a>
       
       
       
@@ -443,7 +513,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://maczyt.github.io/2019/03/02/如何解析template成VNODE/" data-id="cjyvs6bhv000dz0vvrcmc9kh0" class="article-share-link">分享</a>
+      <a data-url="https://maczyt.github.io/2019/03/02/如何解析template成VNODE/" data-id="cjyzz3c21000fr4vvp96ttp3p" class="article-share-link">分享</a>
       
       
       
@@ -490,63 +560,11 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://maczyt.github.io/2019/01/23/浅谈JS模块化/" data-id="cjyvs6bi7000gz0vvvslgjcbg" class="article-share-link">分享</a>
+      <a data-url="https://maczyt.github.io/2019/01/23/浅谈JS模块化/" data-id="cjyzz3c25000hr4vvi10yprzj" class="article-share-link">分享</a>
       
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JS/">JS</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/基础/">基础</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
- 
-
-
-  
-    <article id="post-深入浅出Promise" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/01/20/深入浅出Promise/" class="article-date">
-  <time datetime="2019-01-20T10:28:42.000Z" itemprop="datePublished">2019-01-20</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/01/20/深入浅出Promise/">深入浅出Promise</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>之前说过买了本小册，在小册的讨论组中有人提出了<code>new Promise的RESOLVE</code>和<code>Promise.resolve</code>会有不同的执行效果。一时不明白，后在<code>stackoverflow</code>上搜到了相关问题。举例:</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> p = <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function"><span class="params">resolve</span> =&gt;</span> resolve(<span class="string">'author is maczyt'</span>));</span><br><span class="line"></span><br><span class="line"><span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function"><span class="params">resolve</span> =&gt;</span> &#123;</span><br><span class="line">  resolve(p)</span><br><span class="line">&#125;).then(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="number">1</span>);</span><br><span class="line">&#125;);</span><br><span class="line"><span class="built_in">Promise</span>.resolve(p).then(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="number">2</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-<p>一开始我按照微任务的添加顺序得到答案应该是 1、2, 但通过执行得到的答案是 2、1</p>
-<p>但是让我们看看下面的例子:</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> p = <span class="string">'author is maczyt'</span>; <span class="comment">// p不是promise对象</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function"><span class="params">resolve</span> =&gt;</span> &#123;</span><br><span class="line">  resolve(p)</span><br><span class="line">&#125;).then(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="number">1</span>);</span><br><span class="line">&#125;);</span><br><span class="line"><span class="built_in">Promise</span>.resolve(p).then(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="number">2</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-<p>大家猜猜这个输出顺序又是什么? <code>// 答案为: 1、2</code><br>可以看出这个是按照微任务的执行顺序执行的。</p>
-<p>为何执行效果会刚好相反呢? 作为志向进入某爸爸公司的我，当然得知其然而知其所以然。😁</p>
-<p>大家请往下看。</p>
-        
-          <p class="article-more-link">
-            <a href="/2019/01/20/深入浅出Promise/#more">继续阅读全文 »</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://maczyt.github.io/2019/01/20/深入浅出Promise/" data-id="cjyvs6bie000iz0vvplajv0c0" class="article-share-link">分享</a>
-      
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JS/">JS</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/基础/">基础</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/异步/">异步</a></li></ul>
 
     </footer>
   </div>
@@ -593,7 +611,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title tagcloud">标签云</h3>
     <div class="widget tagcloud">
-      <a href="/tags/CSS/" style="font-size: 17.67px;">CSS</a> <a href="/tags/JS/" style="font-size: 25px;">JS</a> <a href="/tags/Router/" style="font-size: 14px;">Router</a> <a href="/tags/TIP/" style="font-size: 14px;">TIP</a> <a href="/tags/Vue-js/" style="font-size: 14px;">Vue.js</a> <a href="/tags/基础/" style="font-size: 21.33px;">基础</a> <a href="/tags/基础知识/" style="font-size: 14px;">基础知识</a> <a href="/tags/学习/" style="font-size: 14px;">学习</a> <a href="/tags/异步/" style="font-size: 17.67px;">异步</a> <a href="/tags/环境配置/" style="font-size: 17.67px;">环境配置</a> <a href="/tags/转载/" style="font-size: 14px;">转载</a> <a href="/tags/面试/" style="font-size: 17.67px;">面试</a> <a href="/tags/页面布局/" style="font-size: 14px;">页面布局</a>
+      <a href="/tags/CSS/" style="font-size: 16.75px;">CSS</a> <a href="/tags/JS/" style="font-size: 25px;">JS</a> <a href="/tags/Router/" style="font-size: 14px;">Router</a> <a href="/tags/TIP/" style="font-size: 14px;">TIP</a> <a href="/tags/Vue-js/" style="font-size: 14px;">Vue.js</a> <a href="/tags/基础/" style="font-size: 22.25px;">基础</a> <a href="/tags/基础知识/" style="font-size: 14px;">基础知识</a> <a href="/tags/学习/" style="font-size: 14px;">学习</a> <a href="/tags/异步/" style="font-size: 16.75px;">异步</a> <a href="/tags/环境配置/" style="font-size: 16.75px;">环境配置</a> <a href="/tags/转载/" style="font-size: 14px;">转载</a> <a href="/tags/面试/" style="font-size: 19.5px;">面试</a> <a href="/tags/页面布局/" style="font-size: 14px;">页面布局</a>
     </div>
   </div>
 
@@ -603,6 +621,10 @@
     <h3 class="widget-title recent-posts">最新文章</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2019/08/13/《面试系列》之什么是event-loop/">《面试系列》之什么是event loop</a>
+          </li>
         
           <li>
             <a href="/2019/08/03/《面试系列》之什么是BFC/">《面试系列》之什么是BFC?</a>
@@ -620,10 +642,6 @@
             <a href="/2019/07/05/阿里云Cetos安装Mysql/">阿里云Cetos安装Mysql</a>
           </li>
         
-          <li>
-            <a href="/2019/03/21/转-学习正则表达式/">[转] 学习正则表达式</a>
-          </li>
-        
       </ul>
     </div>
   </div>
@@ -633,7 +651,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title archive">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">August 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">July 2019</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a><span class="archive-list-count">2</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">August 2019</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">July 2019</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a><span class="archive-list-count">2</span></li></ul>
     </div>
   </div>
 
